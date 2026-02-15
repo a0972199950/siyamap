@@ -51,24 +51,24 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      # 5. Build storybook
-      - name: 5. Build Storybook
-        run: pnpm -F @siyamap/ui build:storybook
+      # # 5. Build storybook
+      # - name: 5. Build Storybook
+      #   run: pnpm -F @siyamap/ui build:storybook
 
-      # 5-1. 上傳 storybook 到 S3
-      - name: 5-1. Upload storybook to S3
-        run: |
-          aws s3 sync ${{ env.STORYBOOK_OUTPUT_PATH }}/ s3://${{ env.S3_BUCKET_STORYBOOK }} \
-            --delete \
-            --cache-control "no-cache"
+      # # 5-1. 上傳 storybook 到 S3
+      # - name: 5-1. Upload storybook to S3
+      #   run: |
+      #     aws s3 sync ${{ env.STORYBOOK_OUTPUT_PATH }}/ s3://${{ env.S3_BUCKET_STORYBOOK }} \
+      #       --delete \
+      #       --cache-control "no-cache"
 
-      # 5-2. 清除 Storybook CloudFront cache
-      - name: 5-2. Invalidate storybook CloudFront
-        if: success()
-        run: |
-          aws cloudfront create-invalidation \
-            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_STAGE_UI }} \
-            --paths "/index.html" "/iframe.html"
+      # # 5-2. 清除 Storybook CloudFront cache
+      # - name: 5-2. Invalidate storybook CloudFront
+      #   if: success()
+      #   run: |
+      #     aws cloudfront create-invalidation \
+      #       --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_STAGE_UI }} \
+      #       --paths "/index.html" "/iframe.html"
 
       # 6. Build Next.js
       - name: 6. Build Next.js
@@ -78,23 +78,33 @@ jobs:
       - name: 6-1. Package Lambda
         run: |
           cd apps/web
-          zip -r lambda.zip lambda.js .next/standalone node_modules
+          zip -r lambda.zip lambda.js .next/standalone
 
-      # 6-2. 更新 Lambda function
-      - name: 6-2. Update Lambda function
+      # 6-2. Upload Lambda to S3
+      - name: 6-2. Upload Lambda to S3
+        run: |
+          aws s3 cp apps/web/lambda.zip s3://${{ env.S3_BUCKET_NEXTJS_STATIC }}/lambda/lambda.zip
+
+      # 6-3. 更新 Lambda function
+      - name: 6-3. Update Lambda function
         run: |
           aws lambda update-function-code \
             --function-name ${{ env.LAMBDA_NAME_NEXTJS_SSR }} \
-            --zip-file fileb://apps/web/lambda.zip
+            --s3-bucket ${{ env.S3_BUCKET_NEXTJS_STATIC }} \
+            --s3-key lambda/lambda.zip
+          echo "Waiting for Lambda update..."
+          aws lambda wait function-updated \
+            --function-name ${{ env.LAMBDA_NAME_NEXTJS_SSR }}
 
-      # 6-3 更新 S3 上的 Next.js 靜態資產
-      - name: 6-3. Sync Next.js static assets to S3
+      # 6-4. 更新 S3 上的 Next.js 靜態資產
+      - name: 6-4. Sync Next.js static assets to S3
         run: |
-          aws s3 sync ${{ env.NEXTJS_STATIC_OUTPUT_PATH }} s3://${{ env.S3_BUCKET_NEXTJS_STATIC }} --delete
+          aws s3 sync ${{ env.NEXTJS_STATIC_OUTPUT_PATH }} s3://${{ env.S3_BUCKET_NEXTJS_STATIC }} \
+            --delete \
             --cache-control "public, max-age=31536000, immutable"
 
-      # 6-4. 清除 Next.js static CloudFront cache
-      - name: 6-4. Invalidate Next.js static CloudFront
+      # 6-5. 清除 Next.js static CloudFront cache
+      - name: 6-5. Invalidate Next.js static CloudFront
         if: success()
         run: |
           aws cloudfront create-invalidation \
