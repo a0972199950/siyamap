@@ -18,15 +18,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: yarn
+          cache: pnpm
 
       # 3. 安裝依賴
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: pnpm install
 
       # 4. Build Next.js (static export)
       - name: Build Next.js
-        run: yarn build
+        run: pnpm build
 
       # 5. 設定 AWS credentials
       - name: Configure AWS credentials

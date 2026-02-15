@@ -9,11 +9,44 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      # 1. 拉 repo
+      - name: 1. Checkout code
         uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
+      # 2. 固定 Node 版本
+      - name: 2. Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
 
-      - name: Build Next.js
-        run: yarn build
+      # 3. 安裝依賴
+      - name: 3. Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # 4. Build storybook
+      - name: 4. Build Storybook
+        run: pnpm -F @siyamap/ui build:storybook
+
+      # 4-1. 設定 AWS credentials
+      - name: 4-1. Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-southeast-1
+
+      # 4-2. 上傳 storybook 到 S3
+      - name: 4-2. Upload storybook to S3
+        run: |
+          aws s3 sync storybook-static/ s3://siyamap-ui-stage \
+            --delete \
+            --cache-control "public, max-age=31536000, immutable"
+
+      # 4-3. CloudFront cache invalidate
+      - name: 4-3. Invalidate storybook CloudFront
+        if: success()
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_STAGE_UI }} \
+            --paths "/*"
