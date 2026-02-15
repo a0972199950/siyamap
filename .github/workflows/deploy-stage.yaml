@@ -11,14 +11,19 @@ jobs:
     steps:
       # 1. 拉 repo
       - name: 1. Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # 2. 固定 Node 版本
       - name: 2. Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: pnpm
+        env:
+          PNPM_STORE_PATH: ~/.pnpm-store
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
       # 3. 安裝依賴
       - name: 3. Install dependencies
@@ -39,9 +44,9 @@ jobs:
       # 4-2. 上傳 storybook 到 S3
       - name: 4-2. Upload storybook to S3
         run: |
-          aws s3 sync storybook-static/ s3://siyamap-ui-stage \
+          aws s3 sync packages/ui/storybook-static/ s3://siyamap-ui-stage \
             --delete \
-            --cache-control "public, max-age=31536000, immutable"
+            --cache-control "no-cache"
 
       # 4-3. CloudFront cache invalidate
       - name: 4-3. Invalidate storybook CloudFront
@@ -49,4 +54,4 @@ jobs:
         run: |
           aws cloudfront create-invalidation \
             --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_STAGE_UI }} \
-            --paths "/*"
+            --paths "/index.html" "/iframe.html"
