@@ -21,6 +21,8 @@ jobs:
       NEXTJS_STATIC_OUTPUT_PATH: apps/web/.next/static # Next.js static output path
       S3_BUCKET_NEXTJS_STATIC: siyamap-static-stage # 用來存 Next.js 靜態資產的 S3 bucket
       LAMBDA_NAME_NEXTJS_SSR: siyamap-ssr-stage # Lambda function name
+      ECR_REPOSITORY: siyamap/nextjs
+      IMAGE_TAG: ${{ github.sha }}
 
     steps:
       # 1. 拉 repo
@@ -74,27 +76,45 @@ jobs:
       - name: 6. Build Next.js
         run: pnpm -F @siyamap/web build
 
-      # 6-1. 打包壓縮 lambda 需要檔案
-      - name: 6-1. Package Lambda
+      - name: 6-1. Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+        id: login-ecr
+
+      - name: 6-2. Build and push Docker image for Lambda
         run: |
           cd apps/web
-          zip -r lambda.zip lambda.js .next/standalone
+          # 這裡的 . 代表 apps/web
+          docker build -t ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }} .
+          docker push ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
 
-      # 6-2. Upload Lambda to S3
-      - name: 6-2. Upload Lambda to S3
+      - name: 6-3. Update Lambda function to use new image
         run: |
-          aws s3 cp apps/web/lambda.zip s3://${{ env.S3_BUCKET_NEXTJS_STATIC }}/lambda/lambda.zip
-
-      # 6-3. 更新 Lambda function
-      - name: 6-3. Update Lambda function
-        run: |
+          # 更新 Lambda 函數使用新的 Image
           aws lambda update-function-code \
             --function-name ${{ env.LAMBDA_NAME_NEXTJS_SSR }} \
-            --s3-bucket ${{ env.S3_BUCKET_NEXTJS_STATIC }} \
-            --s3-key lambda/lambda.zip
-          echo "Waiting for Lambda update..."
-          aws lambda wait function-updated \
-            --function-name ${{ env.LAMBDA_NAME_NEXTJS_SSR }}
+            --image-uri ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+
+      # # [棄用] 6-1. 打包壓縮 lambda 需要檔案
+      # - name: 6-1. Package Lambda
+      #   run: |
+      #     cd apps/web
+      #     zip -r lambda.zip lambda.js .next/standalone
+
+      # # [棄用] 6-2. Upload Lambda to S3
+      # - name: 6-2. Upload Lambda to S3
+      #   run: |
+      #     aws s3 cp apps/web/lambda.zip s3://${{ env.S3_BUCKET_NEXTJS_STATIC }}/lambda/lambda.zip
+
+      # # [棄用] 6-3. 更新 Lambda function
+      # - name: 6-3. Update Lambda function
+      #   run: |
+      #     aws lambda update-function-code \
+      #       --function-name ${{ env.LAMBDA_NAME_NEXTJS_SSR }} \
+      #       --s3-bucket ${{ env.S3_BUCKET_NEXTJS_STATIC }} \
+      #       --s3-key lambda/lambda.zip
+      #     echo "Waiting for Lambda update..."
+      #     aws lambda wait function-updated \
+      #       --function-name ${{ env.LAMBDA_NAME_NEXTJS_SSR }}
 
       # 6-4. 更新 S3 上的 Next.js 靜態資產
       - name: 6-4. Sync Next.js static assets to S3
@@ -108,4 +128,4 @@ jobs:
         if: success()
         run: |
           aws cloudfront create-invalidation \
-            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_STAGE_STATIC }} \
+            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_STAGE_STATIC }}
