@@ -20,7 +20,7 @@ jobs:
       # [NextJS env]
       NEXTJS_STATIC_OUTPUT_PATH: apps/web/.next/static # Next.js static output path
       S3_BUCKET_NEXTJS_STATIC: siyamap-static-stage # 用來存 Next.js 靜態資產的 S3 bucket
-      LAMBDA_NAME_NEXTJS_SSR: siyamap-ssr-stage # Lambda function name
+      LAMBDA_NAME_NEXTJS_SSR: siyamap-lambda-stage # Lambda function name
       ECR_REPOSITORY: siyamap/nextjs
       IMAGE_TAG: ${{ github.sha }}
 
