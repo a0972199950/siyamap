@@ -19,18 +19,17 @@ jobs:
 
       # [NextJS env]
       NEXTJS_STATIC_OUTPUT_PATH: apps/web/.next/static # Next.js static output path
+      NEXTJS_PUBLIC_PATH: apps/web/public # Next.js public output path
       S3_BUCKET_NEXTJS_STATIC: siyamap-static-stage # 用來存 Next.js 靜態資產的 S3 bucket
       LAMBDA_NAME_NEXTJS_SSR: siyamap-lambda-stage # Lambda function name
       ECR_REPOSITORY: siyamap/nextjs
       IMAGE_TAG: ${{ github.sha }}
 
     steps:
-      # 1. 拉 repo
-      - name: 1. Checkout code
+      - name: 1. 拉 repo
         uses: actions/checkout@v4
 
-      # 2. 固定 Node 版本
-      - name: 2. Setup Node
+      - name: 2. 固定 Node 版本
         uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -41,42 +40,36 @@ jobs:
         with:
           version: 9
 
-      # 3. 安裝依賴
-      - name: 3. Install dependencies
+      - name: 3. 安裝依賴
         run: pnpm install --frozen-lockfile
 
-      # 4. 設定 AWS credentials
-      - name: 4-1. Configure AWS credentials
+      - name: 4-1. 設定 AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      # # 5. Build storybook
       # - name: 5. Build Storybook
       #   run: pnpm -F @siyamap/ui build:storybook
 
-      # # 5-1. 上傳 storybook 到 S3
-      # - name: 5-1. Upload storybook to S3
+      # - name: 5-1. 上傳 storybook 到 S3
       #   run: |
       #     aws s3 sync ${{ env.STORYBOOK_OUTPUT_PATH }}/ s3://${{ env.S3_BUCKET_STORYBOOK }} \
       #       --delete \
       #       --cache-control "no-cache"
 
-      # # 5-2. 清除 Storybook CloudFront cache
-      # - name: 5-2. Invalidate storybook CloudFront
+      # - name: 5-2. 清除 Storybook CloudFront cache
       #   if: success()
       #   run: |
       #     aws cloudfront create-invalidation \
       #       --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_STAGE_UI }} \
       #       --paths "/index.html" "/iframe.html"
 
-      # 6. Build Next.js
       - name: 6. Build Next.js
         run: pnpm -F @siyamap/web build
 
-      - name: 6-1. Login to Amazon ECR
+      - name: 6-1. 登入 Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
         id: login-ecr
 
@@ -91,45 +84,27 @@ jobs:
 
           docker push ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
 
-      - name: 6-3. Update Lambda function to use new image
+      - name: 6-3. 更新 Lambda function 使用新的 Image
         run: |
-          # 更新 Lambda 函數使用新的 Image
           aws lambda update-function-code \
             --function-name ${{ env.LAMBDA_NAME_NEXTJS_SSR }} \
             --image-uri ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
 
-      # # [棄用] 6-1. 打包壓縮 lambda 需要檔案
-      # - name: 6-1. Package Lambda
-      #   run: |
-      #     cd apps/web
-      #     zip -r lambda.zip lambda.js .next/standalone
+          aws lambda wait function-updated --function-name ${{ env.LAMBDA_NAME_NEXTJS_SSR }}
 
-      # # [棄用] 6-2. Upload Lambda to S3
-      # - name: 6-2. Upload Lambda to S3
-      #   run: |
-      #     aws s3 cp apps/web/lambda.zip s3://${{ env.S3_BUCKET_NEXTJS_STATIC }}/lambda/lambda.zip
-
-      # # [棄用] 6-3. 更新 Lambda function
-      # - name: 6-3. Update Lambda function
-      #   run: |
-      #     aws lambda update-function-code \
-      #       --function-name ${{ env.LAMBDA_NAME_NEXTJS_SSR }} \
-      #       --s3-bucket ${{ env.S3_BUCKET_NEXTJS_STATIC }} \
-      #       --s3-key lambda/lambda.zip
-      #     echo "Waiting for Lambda update..."
-      #     aws lambda wait function-updated \
-      #       --function-name ${{ env.LAMBDA_NAME_NEXTJS_SSR }}
-
-      # 6-4. 更新 S3 上的 Next.js 靜態資產
-      - name: 6-4. Sync Next.js static assets to S3
+      - name: 6-4. 更新 S3 上的 Next.js 靜態資產
         run: |
-          aws s3 sync ${{ env.NEXTJS_STATIC_OUTPUT_PATH }} s3://${{ env.S3_BUCKET_NEXTJS_STATIC }} \
+          aws s3 sync ${{ env.NEXTJS_STATIC_OUTPUT_PATH }} s3://${{ env.S3_BUCKET_NEXTJS_STATIC }}/_next/static \
             --delete \
             --cache-control "public, max-age=31536000, immutable"
 
-      # 6-5. 清除 Next.js static CloudFront cache
-      - name: 6-5. Invalidate Next.js static CloudFront
+          aws s3 sync ${{ env.NEXTJS_PUBLIC_PATH }} s3://${{ env.S3_BUCKET_NEXTJS_STATIC }} \
+            --delete \
+            --cache-control "public, max-age=3600" # public 檔案通常不帶 Hash，建議快取時間設短一點
+
+      - name: 6-5. 清除 Next.js static CloudFront cache
         if: success()
         run: |
           aws cloudfront create-invalidation \
-            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_STAGE_STATIC }}
+            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_STAGE_STATIC }} \
+            --paths "/_next/static/*"
