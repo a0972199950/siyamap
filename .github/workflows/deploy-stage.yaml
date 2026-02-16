@@ -99,7 +99,6 @@ jobs:
             --cache-control "public, max-age=31536000, immutable"
 
           aws s3 sync ${{ env.NEXTJS_PUBLIC_PATH }} s3://${{ env.S3_BUCKET_NEXTJS_STATIC }} \
-            --delete \
             --cache-control "public, max-age=3600" # public 檔案通常不帶 Hash，建議快取時間設短一點
 
       - name: 6-5. 清除 Next.js static CloudFront cache
