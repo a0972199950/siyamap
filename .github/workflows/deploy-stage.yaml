@@ -67,7 +67,8 @@ jobs:
             --paths "/index.html" "/iframe.html"
 
       - name: 6. Build Next.js
-        run: pnpm build
+        # ...表示先執行所有相依的 package build，再執行 web 的 build
+        run: pnpm -F @siyamap/web... build
 
       - name: 6-1. 登入 Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
