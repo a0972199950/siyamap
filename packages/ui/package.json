@@ -8,6 +8,8 @@
     "dev": "storybook dev -p 6006",
     "build": "tsup src/index.ts --dts",
     "build:storybook": "storybook build",
+    "test": "vitest",
+    "test:run": "vitest run",
     "lint": "eslint ."
   },
   "dependencies": {
