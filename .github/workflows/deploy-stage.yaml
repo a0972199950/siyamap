@@ -43,7 +43,7 @@ jobs:
       - name: 3. 安裝依賴
         run: pnpm install --frozen-lockfile
 
-      - name: 4-1. 設定 AWS credentials
+      - name: 4. 設定 AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
