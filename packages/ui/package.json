@@ -12,6 +12,9 @@
     "test:run": "vitest run",
     "lint": "eslint ."
   },
+  "exports": {
+    "./style.css": "./dist/index.css"
+  },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.18",
     "react": "^18",
