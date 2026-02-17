@@ -1,0 +1,11 @@
+@import "tailwindcss/theme";
+@import "../styles/custom-theme.css";
+
+@utility base {
+  @apply text-white bg-john-500 rounded-lg px-4 py-2;
+}
+
+.foo__bar {
+  @apply base;
+}
+
