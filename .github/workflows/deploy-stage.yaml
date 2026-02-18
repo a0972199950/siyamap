@@ -69,9 +69,8 @@ jobs:
             --paths "/index.html" "/iframe.html"
 
       - name: 6-3. 部署 storybook 到 chromatic
-        uses: chromaui/action@latest
-        with:
-          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN_STAGE }}
+        run: |
+          pnpm --filter @siyamap/ui exec npx chromatic --project-token=${{ secrets.CHROMATIC_PROJECT_TOKEN_STAGE }}
 
       # [START] 部署 Next.js
       - name: 7-1. 登入 Amazon ECR
