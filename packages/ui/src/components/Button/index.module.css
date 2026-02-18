@@ -1,5 +1,5 @@
 @import "tailwindcss/theme";
-@import "../styles/custom-theme.css";
+@import "../../styles/custom-theme.css";
 
 @utility button-base {
   @apply px-2 py-3 border-2 rounded-full;

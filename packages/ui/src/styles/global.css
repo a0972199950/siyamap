@@ -1,2 +1,5 @@
 @import "tailwindcss";
 @import "./custom-theme.css";
+
+/* FontAwesome 樣式 */
+@import "@fortawesome/fontawesome-svg-core/styles.css";

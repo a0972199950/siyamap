@@ -47,14 +47,23 @@ const meta: Meta<typeof Button> = {
 
 export default meta
 
-export const Primary: StoryObj<typeof Button> = {
+type Story = StoryObj<typeof Button>;
+
+export const Playground: Story = {
+  args: {
+    children: "Hello world",
+    type: "primary"
+  }
+};
+
+export const Primary: Story = {
   args: {
     children: "分享視野",
     type: "primary"
   },
 }
 
-export const Secondary: StoryObj<typeof Button> = {
+export const Secondary: Story = {
   args: {
     children: "登入",
     type: "secondary"

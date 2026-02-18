@@ -1,3 +1,7 @@
 import './styles/global.css'
 
-export { default as Button } from './Button'
+// FontAwesome 圖標和配置
+export * from './fontawesome'
+
+export { default as Button } from './components/Button'
+export { default as Icon } from './components/Icon'

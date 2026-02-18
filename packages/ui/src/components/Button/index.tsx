@@ -1,7 +1,7 @@
 import React from "react"
 import clsx from 'clsx';
 import styles from "./index.module.css"
-import { UiColors } from "../types/common"
+import { UiColors } from "../../types/common"
 
 interface Props {
   type?: 'primary' | 'secondary'
