@@ -14,7 +14,7 @@ export interface Props extends React.HTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode
 }
 
-const Button = (props: Props): JSX.Element => {
+const Button = (props: Props): React.ReactElement => {
   const { type = 'primary', color, rounded = 'full', size = 'sm', icon, className, children } = props
 
   const classes = clsx(
