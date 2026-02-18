@@ -2,11 +2,23 @@
 @import "../styles/custom-theme.css";
 
 @utility button-base {
-  @apply px-2 py-1 border-2;
+  @apply px-2 py-3 border-2 rounded-full;
+  font-family: 'Noto Sans CJK TC';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 19px;
+  letter-spacing: 0.03em;
 }
 
 .button {
-  @apply button-base;
+  @apply px-2 py-3 border-2 rounded-full;
+  font-family: 'Noto Sans CJK TC';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 19px;
+  letter-spacing: 0.03em;
 }
 
 .button--primary {

@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "storybook dev -p 6006",
     "build": "tsup src/index.ts --dts && storybook build",
-    "build:storybook": "storybook build",
+    "build-storybook": "storybook build",
     "test": "vitest",
     "test:run": "vitest run",
     "lint": "eslint ."
@@ -35,6 +35,7 @@
     "@vitest/browser-playwright": "^4.0.18",
     "@vitest/coverage-v8": "^4.0.18",
     "autoprefixer": "^10.4.24",
+    "chromatic": "^15.1.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "esbuild-sass-plugin": "^3.6.0",
