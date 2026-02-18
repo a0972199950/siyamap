@@ -1,13 +1,11 @@
 @theme {
-  --font-display: "Satoshi", "sans-serif";
-  --breakpoint-3xl: 120rem;
-  --color-john-100: oklch(0.99 0 0);
-  --color-john-200: oklch(0.98 0.04 113.22);
-  --color-john-300: oklch(0.94 0.11 115.03);
-  --color-john-400: oklch(0.92 0.19 114.08);
-  --color-john-500: oklch(0.84 0.18 117.33);
-  --color-john-600: oklch(0.53 0.12 118.34);
-  --ease-fluid: cubic-bezier(0.3, 0, 0, 1);
-  --ease-snappy: cubic-bezier(0.2, 0, 0, 1);
-  /* ... */
+  /** Custom theme colors */
+  --color-ui-primary-500: #784BFF;
+  --color-ui-primary-400: #F1E5FF;
+  --color-ui-secondary-500: #EE82B4;
+  --color-ui-secondary-400: #DAA5BF;
+  --color-ui-secondary-300: #F5C8D7;
+  --color-ui-red: #FF0000;
+  --color-ui-green: #039F6C;
+  --color-ui-blue: #168FE8;
 }

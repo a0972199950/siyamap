@@ -26,6 +26,7 @@ jobs:
       IMAGE_TAG: ${{ github.sha }}
 
     steps:
+      # [START] 共同建置與部署流程
       - name: 1. 拉 repo
         uses: actions/checkout@v4
 
@@ -43,38 +44,36 @@ jobs:
       - name: 3. 安裝依賴
         run: pnpm install --frozen-lockfile
 
-      - name: 4. 設定 AWS credentials
+      - name: 4. Build 所有 package
+        run: pnpm -r build
+
+      - name: 5. 設定 AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: 5. Build Storybook
-        run: pnpm -F @siyamap/ui build:storybook
-
-      - name: 5-1. 上傳 storybook 到 S3
+      # [START] 部署 Storybook
+      - name: 6-1. 上傳 storybook 到 S3
         run: |
           aws s3 sync ${{ env.STORYBOOK_OUTPUT_PATH }}/ s3://${{ env.S3_BUCKET_STORYBOOK }} \
             --delete \
             --cache-control "no-cache"
 
-      - name: 5-2. 清除 Storybook CloudFront cache
+      - name: 6-2. 清除 Storybook CloudFront cache
         if: success()
         run: |
           aws cloudfront create-invalidation \
             --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_STAGE_UI }} \
             --paths "/index.html" "/iframe.html"
 
-      - name: 6. Build Next.js
-        # ...表示先執行所有相依的 package build，再執行 web 的 build
-        run: pnpm -F @siyamap/web... build
-
-      - name: 6-1. 登入 Amazon ECR
+      # [START] 部署 Next.js
+      - name: 7-1. 登入 Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
         id: login-ecr
 
-      - name: 6-2. Build and push Docker image for Lambda
+      - name: 7-2. Build and push Docker image for Lambda
         run: |
           cd apps/web
           # 強制停用 BuildKit 的進階 Manifest 功能
@@ -85,7 +84,7 @@ jobs:
 
           docker push ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
 
-      - name: 6-3. 更新 Lambda function 使用新的 Image
+      - name: 7-3. 更新 Lambda function 使用新的 Image
         run: |
           aws lambda update-function-code \
             --function-name ${{ env.LAMBDA_NAME_NEXTJS_SSR }} \
@@ -93,7 +92,7 @@ jobs:
 
           aws lambda wait function-updated --function-name ${{ env.LAMBDA_NAME_NEXTJS_SSR }}
 
-      - name: 6-4. 更新 S3 上的 Next.js 靜態資產
+      - name: 7-4. 更新 S3 上的 Next.js 靜態資產
         run: |
           aws s3 sync ${{ env.NEXTJS_STATIC_OUTPUT_PATH }} s3://${{ env.S3_BUCKET_NEXTJS_STATIC }}/_next/static \
             --delete \
@@ -103,7 +102,7 @@ jobs:
             --delete \
             --cache-control "public, max-age=3600" # public 檔案通常不帶 Hash，建議快取時間設短一點
 
-      - name: 6-5. 清除 Next.js static CloudFront cache
+      - name: 7-5. 清除 Next.js static CloudFront cache
         if: success()
         run: |
           aws cloudfront create-invalidation \
