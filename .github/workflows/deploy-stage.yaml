@@ -29,6 +29,8 @@ jobs:
       # [START] 共同建置與部署流程
       - name: 1. 拉 repo
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: 2. 固定 Node 版本
         uses: actions/setup-node@v4
