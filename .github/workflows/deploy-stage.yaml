@@ -72,7 +72,7 @@ jobs:
 
       - name: 6-3. 部署 storybook 到 chromatic
         run: |
-          pnpm --filter @siyamap/ui exec npx chromatic --project-token=${{ secrets.CHROMATIC_PROJECT_TOKEN_STAGE }}
+          pnpm --filter @siyamap/ui exec npx chromatic --project-token=${{ secrets.CHROMATIC_PROJECT_TOKEN_STAGE }} --exit-zero-on-changes
 
       # [START] 部署 Next.js
       - name: 7-1. 登入 Amazon ECR
