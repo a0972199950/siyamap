@@ -1,24 +1,9 @@
 @import "tailwindcss/theme";
 @import "../../styles/custom-theme.css";
 
-@utility button-base {
-  @apply px-2 py-3 border-2 rounded-full;
-  font-family: 'Noto Sans CJK TC';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 13px;
-  line-height: 19px;
-  letter-spacing: 0.03em;
-}
-
 .button {
-  @apply px-2 py-3 border-2 rounded-full;
+  @apply flex items-center justify-center gap-1 cursor-pointer font-normal leading-none;
   font-family: 'Noto Sans CJK TC';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 13px;
-  line-height: 19px;
-  letter-spacing: 0.03em;
 }
 
 .button--primary {
@@ -52,7 +37,7 @@
 }
 
 .button--size-sm {
-  @apply text-sm px-2 py-1;
+  @apply text-sm px-4 py-3;
 }
 
 .button--size-md {

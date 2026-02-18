@@ -7,7 +7,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { faGithub, faTwitter } from '@fortawesome/free-brands-svg-icons';
 
-const meta: Meta<typeof Icon> = {
+const meta = {
   component: Icon,
   parameters: {
     layout: 'centered',
@@ -64,7 +64,7 @@ const meta: Meta<typeof Icon> = {
       options: [undefined, 90, 180, 270]
     },
   }
-}
+} satisfies Meta<typeof Icon>;
 
 export default meta;
 

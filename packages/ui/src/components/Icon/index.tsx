@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import styles from './index.module.css';
 import { UiColors } from '../../types/common';
 
-interface Props extends React.HTMLAttributes<HTMLSpanElement> {
+export interface Props extends React.HTMLAttributes<HTMLSpanElement> {
   /**
    * FontAwesome 圖標定義
    */
@@ -80,3 +80,6 @@ const Icon = React.forwardRef<HTMLSpanElement, Props>(
 );
 
 export default Icon;
+
+// FontAwesome 圖標和配置
+export * from '../../utils/fontawesome'

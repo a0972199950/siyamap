@@ -35,6 +35,7 @@ export {
   faUpload,
   faShare,
   faExternalLinkAlt,
+  faArrowRightToBracket
 } from '@fortawesome/free-solid-svg-icons';
 
 export {

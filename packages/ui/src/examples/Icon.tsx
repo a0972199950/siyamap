@@ -1,4 +1,3 @@
-import React from 'react';
 import Icon from '../components/Icon';
 import {
   faHome,
@@ -24,7 +23,7 @@ export default function IconExample() {
       <div>
         <h2 className="text-2xl font-bold mb-4">Icon 組件範例</h2>
         <p className="text-gray-600 mb-6">
-          展示 Icon 組件的各種使用方式，包括大小、顏色、動畫和變形效果
+          展示 Icon 組件的各種使用方式，包括大小、顏色、動畫和變形效果。Icon 來源為 FontAwesome，支援所有免費的 FontAwesome 圖標和功能。
         </p>
       </div>
 
@@ -161,7 +160,7 @@ export default function IconExample() {
       {/* 實際應用場景 */}
       <section>
         <h3 className="text-lg font-semibold mb-3">實際應用場景</h3>
-        
+
         {/* 按鈕 */}
         <div className="mb-6">
           <h4 className="text-md font-medium mb-3">按鈕中使用</h4>

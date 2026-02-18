@@ -1,18 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import Icon from './Icon';
+import Button from './Button';
 
 const meta = {
-  component: Icon,
+  component: Button,
   parameters: {
     layout: 'padded',
     docs: {
       description: {
-        component: '完整的 Icon 組件使用範例，展示各種大小、顏色、動畫和變形效果的使用方式。'
+        component: '完整的 Button 組件使用範例，展示各種類型、大小、顏色和圓角設定的使用方式。'
       }
     }
   },
   tags: ['autodocs'],
-} satisfies Meta<typeof Icon>;
+} satisfies Meta<typeof Button>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

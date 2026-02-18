@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite"
 import Button from "./index"
+import { faHeart, faArrowRightToBracket } from '../Icon'
 
-const meta: Meta<typeof Button> = {
+const meta = {
   component: Button,
   tags: ['autodocs'],
   argTypes: {
@@ -43,15 +44,15 @@ const meta: Meta<typeof Button> = {
       description: "按鈕內容"
     }
   }
-}
+} satisfies Meta<typeof Button>;
 
 export default meta
 
-type Story = StoryObj<typeof Button>;
+type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
   args: {
-    children: "Hello world",
+    children: "中文 English",
     type: "primary"
   }
 };
@@ -59,13 +60,17 @@ export const Playground: Story = {
 export const Primary: Story = {
   args: {
     children: "分享視野",
-    type: "primary"
+    type: "primary",
+    size: 'sm',
+    icon: faHeart
   },
 }
 
 export const Secondary: Story = {
   args: {
     children: "登入",
-    type: "secondary"
-  },
+    type: "secondary",
+    size: 'sm',
+    icon: faArrowRightToBracket
+  }
 }
