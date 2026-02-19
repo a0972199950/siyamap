@@ -9,6 +9,7 @@ function SlowComponent({ index }: { index: number }) {
   // 保持 0.05ms 的負擔，模擬真實複雜組件
   while (performance.now() - startTime < 0.05) {}
 
+  return null
   // return (
   //   <div
   //     className="h-2 w-2 rounded-sm bg-emerald-500 transition-colors hover:bg-white"
