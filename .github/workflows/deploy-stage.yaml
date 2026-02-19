@@ -24,6 +24,7 @@ jobs:
       LAMBDA_NAME_NEXTJS_SSR: siyamap-lambda-stage # Lambda function name
       ECR_REPOSITORY: siyamap/nextjs
       IMAGE_TAG: ${{ github.sha }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL_STAGE }}
 
     steps:
       # [START] 共同建置與部署流程
@@ -70,9 +71,9 @@ jobs:
             --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_STAGE_UI }} \
             --paths "/index.html" "/iframe.html"
 
-      - name: 6-3. 部署 storybook 到 chromatic
-        run: |
-          pnpm --filter @siyamap/ui exec npx chromatic --project-token=${{ secrets.CHROMATIC_PROJECT_TOKEN_STAGE }} --exit-zero-on-changes
+      # - name: 6-3. 部署 storybook 到 chromatic
+      #   run: |
+      #     pnpm --filter @siyamap/ui exec npx chromatic --project-token=${{ secrets.CHROMATIC_PROJECT_TOKEN_STAGE }} --exit-zero-on-changes
 
       # [START] 部署 Next.js
       - name: 7-1. 登入 Amazon ECR

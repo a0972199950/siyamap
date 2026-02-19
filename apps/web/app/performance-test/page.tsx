@@ -10,12 +10,6 @@ function SlowComponent({ index }: { index: number }) {
   while (performance.now() - startTime < 0.05) {}
 
   return null
-  // return (
-  //   <div
-  //     className="h-2 w-2 rounded-sm bg-emerald-500 transition-colors hover:bg-white"
-  //     title={`Item ${index}`}
-  //   />
-  // )
 }
 
 export default function PerformanceTestPage() {

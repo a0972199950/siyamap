@@ -4,9 +4,14 @@
   "scripts": {
     "dev": "turbo dev",
     "build": "turbo build",
-    "lint": "turbo lint"
+    "lint": "turbo lint",
+    "typecheck:web": "pnpm --filter @siyamap/web exec tsc --noEmit",
+    "typecheck:ui": "pnpm --filter @siyamap/ui exec tsc --noEmit",
+    "typecheck": "turbo typecheck",
+    "prepare": "husky"
   },
   "devDependencies": {
+    "husky": "^9.1.7",
     "turbo": "^1.13.0"
   },
   "dependencies": {
