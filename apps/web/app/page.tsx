@@ -95,25 +95,22 @@ export default function Home() {
         </div>
 
         <div className="mb-8 flex items-center justify-center gap-4">
-          <Image
+          <img
             src="/public/purdin.jpg"
             alt="Guagua"
-            width={200}
-            height={300}
+            style={{ width: '200px' }}
           />
 
-          <Image
+          <img
             src="/public/guagua.jpg"
             alt="Guagua"
-            width={500}
-            height={300}
+            style={{ width: '500px' }}
           />
 
-          <Image
+          <img
             src="/public/duoduo.jpeg"
             alt="Guagua"
-            width={200}
-            height={300}
+            style={{ width: '200px' }}
           />
         </div>
 
