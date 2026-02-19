@@ -94,24 +94,33 @@ export default function Home() {
           </h2>
         </div>
 
-        <div className="mb-8 flex items-center justify-center gap-4">
-          <img
-            src="/public/purdin.jpg"
-            alt="Guagua"
-            style={{ width: '200px' }}
-          />
+        <div className="mb-8 flex h-90 w-[70vw] items-stretch justify-center">
+          <div className="relative flex-1">
+            <Image
+              src="/public/purdin.jpg"
+              alt="Guagua"
+              fill
+              className="object-contain"
+            />
+          </div>
 
-          <img
-            src="/public/guagua.jpg"
-            alt="Guagua"
-            style={{ width: '500px' }}
-          />
+          <div className="relative w-xl" style={{ aspectRatio: '4/3' }}>
+            <Image
+              src="/public/guagua.jpg"
+              alt="Guagua"
+              fill
+              className="object-contain"
+            />
+          </div>
 
-          <img
-            src="/public/duoduo.jpeg"
-            alt="Guagua"
-            style={{ width: '200px' }}
-          />
+          <div className="relative flex-1">
+            <Image
+              src="/public/duoduo.jpeg"
+              alt="Guagua"
+              fill
+              className="object-contain"
+            />
+          </div>
         </div>
 
         {/* Celebratory emojis */}

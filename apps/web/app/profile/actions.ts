@@ -11,12 +11,12 @@ export async function createUser(formData: FormData) {
 
   try {
     // 2. 使用 Drizzle 插入資料
-    // await db.insert(users).values({
-    //   email: email,
-    //   username: username,
-    //   // metadata 可以傳入 JSON 物件，Drizzle 會幫你處理
-    //   metadata: { source: 'nextjs-server-action', joinedVia: 'web' },
-    // })
+    await db.insert(users).values({
+      email: email,
+      username: username,
+      // metadata 可以傳入 JSON 物件，Drizzle 會幫你處理
+      metadata: { source: 'nextjs-server-action', joinedVia: 'web' },
+    })
 
     // 3. 告訴 Next.js 重新整理頁面快取，讓新資料立刻顯示
     revalidatePath('/')
