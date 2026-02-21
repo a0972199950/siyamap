@@ -82,6 +82,8 @@ jobs:
       # 2. 登入公有 ECR (為了解決 COPY --from=public.ecr.aws 的 Rate Limit)
       - name: 7-1-b. Login to Amazon ECR Public
         uses: aws-actions/amazon-ecr-login@v2
+        env:
+          AWS_REGION: us-east-1 # 公有 ECR 目前只在 us-east-1 有服務
         with:
           registry-type: public
 
