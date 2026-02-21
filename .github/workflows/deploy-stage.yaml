@@ -77,12 +77,14 @@ jobs:
       - name: 7-1. 登入 Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
         id: login-ecr
+        with:
+          # 同時登入 Public ECR 以解決 Rate Limit 問題
+          registry-type: "combined"
 
       - name: 7-2. Build and push Docker image for Lambda
         run: |
           cd apps/web
           # 強制停用 BuildKit 的進階 Manifest 功能
-          export DOCKER_BUILDKIT=0
           docker build \
             --platform linux/amd64 \
             -t ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }} .
