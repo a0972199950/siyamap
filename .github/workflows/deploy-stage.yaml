@@ -100,8 +100,7 @@ jobs:
       - name: 7-3. 更新資料庫 Schema
         run: |
           cd apps/web
-          pnpm db:generate
-          pnpm db:migrate
+          pnpm db:push
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL_STAGE }}
 
