@@ -99,8 +99,8 @@ jobs:
 
       - name: 7-3. 更新資料庫 Schema
         run: |
-          pnpm drizzle-kit generate
-          pnpm drizzle-kit migrate
+          pnpm db:generate
+          pnpm db:migrate
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL_STAGE }}
 
