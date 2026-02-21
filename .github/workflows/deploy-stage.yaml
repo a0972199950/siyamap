@@ -74,12 +74,16 @@ jobs:
       #     pnpm --filter @siyamap/ui exec npx chromatic --project-token=${{ secrets.CHROMATIC_PROJECT_TOKEN_STAGE }} --exit-zero-on-changes
 
       # [START] 部署 Next.js
-      - name: 7-1. 登入 Amazon ECR
+      # 1. 登入私有 ECR (為了稍後 push 你的 image)
+      - name: 7-1-a. Login to Amazon ECR Private
         uses: aws-actions/amazon-ecr-login@v2
         id: login-ecr
+
+      # 2. 登入公有 ECR (為了解決 COPY --from=public.ecr.aws 的 Rate Limit)
+      - name: 7-1-b. Login to Amazon ECR Public
+        uses: aws-actions/amazon-ecr-login@v2
         with:
-          # 同時登入 Public ECR 以解決 Rate Limit 問題
-          registry-type: "combined"
+          registry-type: public
 
       - name: 7-2. Build and push Docker image for Lambda
         run: |
