@@ -99,6 +99,7 @@ jobs:
 
       - name: 7-3. 更新資料庫 Schema
         run: |
+          cd apps/web
           pnpm db:generate
           pnpm db:migrate
         env:
