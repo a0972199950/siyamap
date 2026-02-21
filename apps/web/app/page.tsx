@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
+import guagua from '@/public/public/guagua.jpg'
+import purdin from '@/public/public/purdin.jpg'
+import duoduo from '@/public/public/duoduo.jpeg'
 
 export default function Home() {
   const [confetti, setConfetti] = useState<
@@ -94,33 +97,27 @@ export default function Home() {
           </h2>
         </div>
 
-        <div className="mb-8 flex h-90 w-[70vw] items-stretch justify-center">
-          <div className="relative flex-1">
-            <Image
-              src="/public/purdin.jpg"
-              alt="Guagua"
-              fill
-              className="object-contain"
-            />
-          </div>
+        <div className="mb-8 flex w-[70vw] items-center justify-center">
+          <Image
+            src={purdin}
+            alt="Purdin"
+            placeholder="blur"
+            style={{ minWidth: 0, flexGrow: 1, flexBasis: '0' }}
+          />
 
-          <div className="relative w-xl" style={{ aspectRatio: '4/3' }}>
-            <Image
-              src="/public/guagua.jpg"
-              alt="Guagua"
-              fill
-              className="object-contain"
-            />
-          </div>
+          <Image
+            src={guagua}
+            alt="Guagua"
+            placeholder="blur"
+            style={{ minWidth: 0, flexGrow: 1, flexBasis: '0' }}
+          />
 
-          <div className="relative flex-1">
-            <Image
-              src="/public/duoduo.jpeg"
-              alt="Guagua"
-              fill
-              className="object-contain"
-            />
-          </div>
+          <Image
+            src={duoduo}
+            alt="Duoduo"
+            placeholder="blur"
+            style={{ minWidth: 0, flexGrow: 1, flexBasis: '0' }}
+          />
         </div>
 
         {/* Celebratory emojis */}

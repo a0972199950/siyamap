@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import '@siyamap/ui/style.css'
 import './globals.css'
+import QueryClientProvider from '@/components/providers/QueryClientProvider'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -27,8 +28,9 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        suppressHydrationWarning={true}
       >
-        {children}
+        <QueryClientProvider>{children}</QueryClientProvider>
       </body>
     </html>
   )

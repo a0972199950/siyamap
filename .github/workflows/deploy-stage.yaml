@@ -55,9 +55,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      # [START] 部署 Storybook
+          aws-region: ${{ env.AWS_REGION }} # [START] 部署 Storybook
       - name: 6-1. 上傳 storybook 到 S3
         run: |
           aws s3 sync ${{ env.STORYBOOK_OUTPUT_PATH }}/ s3://${{ env.S3_BUCKET_STORYBOOK }} \
@@ -91,7 +89,14 @@ jobs:
 
           docker push ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
 
-      - name: 7-3. 更新 Lambda function 使用新的 Image
+      - name: 7-3. 更新資料庫 Schema
+        run: |
+          pnpm drizzle-kit generate
+          pnpm drizzle-kit migrate
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL_STAGE }}
+
+      - name: 7-4. 更新 Lambda function 使用新的 Image
         run: |
           aws lambda update-function-code \
             --function-name ${{ env.LAMBDA_NAME_NEXTJS_SSR }} \
@@ -99,7 +104,7 @@ jobs:
 
           aws lambda wait function-updated --function-name ${{ env.LAMBDA_NAME_NEXTJS_SSR }}
 
-      - name: 7-4. 更新 S3 上的 Next.js 靜態資產
+      - name: 7-5. 更新 S3 上的 Next.js 靜態資產
         run: |
           aws s3 sync ${{ env.NEXTJS_STATIC_OUTPUT_PATH }} s3://${{ env.S3_BUCKET_NEXTJS_STATIC }}/_next/static \
             --delete \
@@ -109,7 +114,7 @@ jobs:
             --delete \
             --cache-control "public, max-age=3600" # public 檔案通常不帶 Hash，建議快取時間設短一點
 
-      - name: 7-5. 清除 Next.js static CloudFront cache
+      - name: 7-6. 清除 Next.js static CloudFront cache
         if: success()
         run: |
           aws cloudfront create-invalidation \
