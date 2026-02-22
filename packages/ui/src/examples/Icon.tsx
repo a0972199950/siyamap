@@ -205,7 +205,8 @@ export default function IconExample() {
         <h3 className="text-lg font-semibold mb-3">使用方式</h3>
         <div className="bg-gray-100 p-4 rounded-md">
           <pre className="text-sm text-gray-800 overflow-x-auto">
-{`import { Icon, faHome, faUser, faSpinner } from '@siyamap/ui';
+{`import { Icon } from '@siyamap/ui';
+import { faHome, faUser, faSpinner } from '@siyamap/ui/Icon';
 
 // 基本使用
 <Icon icon={faHome} />

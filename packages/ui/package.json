@@ -14,6 +14,16 @@
     "lint": "eslint ."
   },
   "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    },
+    "./Icon": {
+      "types": "./dist/components/Icon/index.d.ts",
+      "import": "./dist/components/Icon/index.js", 
+      "require": "./dist/components/Icon/index.js"
+    },
     "./style.css": "./dist/index.css"
   },
   "dependencies": {

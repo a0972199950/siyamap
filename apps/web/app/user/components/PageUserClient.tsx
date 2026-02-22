@@ -2,7 +2,8 @@
 
 import React from 'react'
 import dayjs from '@/lib/dayjs'
-import { Button, Icon, faSpinner } from '@siyamap/ui'
+import { Button, Icon } from '@siyamap/ui'
+import { faSpinner } from '@siyamap/ui'
 import useUser from '../hooks/use-user'
 import { TUserDto } from '@/types/dto'
 

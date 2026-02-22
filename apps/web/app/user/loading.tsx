@@ -1,4 +1,5 @@
-import { Icon, faSpinner } from '@siyamap/ui'
+import { Icon } from '@siyamap/ui'
+import { faSpinner } from '@siyamap/ui/Icon'
 
 const LoadingUser = () => {
   return (

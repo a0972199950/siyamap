@@ -2,7 +2,10 @@ import { defineConfig } from 'tsup';
 import { sassPlugin } from "esbuild-sass-plugin";
 
 export default defineConfig({
-  entry: ['src/index.ts'],
+  entry: [
+    'src/index.ts',
+    'src/components/Icon/index.tsx'
+  ],
   format: ['cjs', 'esm'],
   dts: true,
   splitting: true,

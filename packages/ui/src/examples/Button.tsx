@@ -229,7 +229,8 @@ export default function ButtonExample() {
         <h3 className="text-lg font-semibold mb-3">使用方式</h3>
         <div className="bg-gray-100 p-4 rounded-md">
           <pre className="text-sm text-gray-800 overflow-x-auto">
-{`import { Button, Icon, faDownload } from '@siyamap/ui';
+{`import { Button, Icon } from '@siyamap/ui';
+import { faDownload } from '@siyamap/ui/Icon';
 
 // 基本使用
 <Button>預設按鈕</Button>
