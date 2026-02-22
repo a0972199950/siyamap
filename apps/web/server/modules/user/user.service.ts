@@ -1,14 +1,14 @@
-import db from '@/db'
-import { CreateUserDto } from './dto'
+import db from '@/lib/db'
+import { TInsertUserDto } from '@/types/dto'
 import users from './user.schema'
 
 class UserService {
   private users = users
 
-  async insert(dto: CreateUserDto) {
+  async insert(dto: TInsertUserDto) {
     const { password, confirmPassword, ...userData } = dto
 
-    const newUser = await db.insert(this.users).values(userData)
+    const [newUser] = await db.insert(this.users).values(userData).returning()
     return newUser
   }
 

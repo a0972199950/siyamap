@@ -2,7 +2,7 @@
 import React from 'react'
 import { NextPage } from 'next'
 import { Button, Icon, faSpinner } from '@siyamap/ui'
-import useUser from './hooks/useUser'
+import useUser from './hooks/use-user'
 
 const PageUser: NextPage = () => {
   const [username, setUsername] = React.useState('')
@@ -77,7 +77,7 @@ const PageUser: NextPage = () => {
           return (
             <li key={user.id}>
               {user.username} ({user.email}) - 建立於:{' '}
-              {new Date(user.createdAt).toLocaleString()}
+              {user.createdAt.format('YYYY-MM-DD HH:mm:ss')}
             </li>
           )
         })}

@@ -1,39 +1,42 @@
+import { ZodError } from 'zod'
 import { NextRequest } from 'next/server'
-import { CreateUserSchema } from './dto'
+import { InsertUserDto } from '@/types/dto'
 import userService from './user.service'
-import ApiResponse from '@/utils/api-response'
+import BaseController from '@/utils/base-controller'
 
-class UserController {
-  static async insert(req: NextRequest) {
+class UserController extends BaseController {
+  async insert(req: NextRequest) {
     try {
       const data = await req.json()
-      const validatedData = CreateUserSchema.parse(data)
+      const validatedData = InsertUserDto.parse(data)
 
       const newUser = await userService.insert(validatedData)
 
-      return ApiResponse.success(newUser, 201)
+      return this.formatSuccessResponse({ data: newUser }, 201)
     } catch (err: any) {
-      console.error('創建使用者失敗:', err)
+      console.error('UserController insert error', err)
 
-      if (err.name === 'ZodError') {
-        // TODO: 製作統一的錯誤格式
-        return ApiResponse.error(err, 400)
+      if (err instanceof ZodError) {
+        return this.formatErrorResponse(
+          'API_REQUEST_VALIDATION_ERROR',
+          err.message,
+          400
+        )
       }
 
-      return ApiResponse.error(err, 500)
+      return this.formatErrorResponse('INTERNAL_SERVER_ERROR', err.message, 500)
     }
   }
 
-  static async findAll() {
+  async findAll(_req: NextRequest) {
     try {
       const users = await userService.findAll()
-      return ApiResponse.success(users)
+      return this.formatSuccessResponse({ data: users })
     } catch (err: any) {
-      console.error('取得使用者失敗:', err)
-
-      return ApiResponse.error(err, 500)
+      console.error('UserController findAll error', err)
+      return this.formatErrorResponse('INTERNAL_SERVER_ERROR', err.message, 500)
     }
   }
 }
 
-export default UserController
+export default new UserController()

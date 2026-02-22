@@ -1,7 +1,7 @@
 import { NextPage } from 'next'
 import { Button } from '@siyamap/ui'
 import { createUser } from './actions'
-import db from '@/db'
+import db from '@/lib/db'
 import { users } from '@/server/schema'
 
 const PageProfile: NextPage = async () => {

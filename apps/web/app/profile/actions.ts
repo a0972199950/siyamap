@@ -1,6 +1,6 @@
 'use server' // 這是 Server Action 的關鍵標記
 
-import db from '@/db' // 你的 Drizzle 連線實體
+import db from '@/lib/db' // 你的 Drizzle 連線實體
 import { users } from '@/server/schema' // 你的 Schema 定義
 import { revalidatePath } from 'next/cache'
 
