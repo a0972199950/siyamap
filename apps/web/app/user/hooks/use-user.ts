@@ -1,7 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import api from '@/lib/api-client'
+import { TUserDto } from '@/types/dto'
 
-const useUser = () => {
+const useUser = (initialUsers: TUserDto[]) => {
   const queryClient = useQueryClient()
 
   const { data: users, isLoading } = useQuery({
@@ -16,6 +17,7 @@ const useUser = () => {
         return []
       }
     },
+    initialData: initialUsers,
   })
 
   const createUserMutation = useMutation({

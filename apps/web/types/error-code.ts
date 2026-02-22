@@ -4,5 +4,6 @@ type ErrorCode =
   | 'API_REQUEST_VALIDATION_ERROR' // API 請求格式錯誤
   | 'VALIDATION_ERROR' // 驗證錯誤
   | 'INTERNAL_SERVER_ERROR' // 內部伺服器錯誤
+  | 'UNKNOWN_ERROR' // 未知錯誤
 
 export default ErrorCode

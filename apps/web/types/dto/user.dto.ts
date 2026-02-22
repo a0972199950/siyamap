@@ -1,12 +1,11 @@
 import { z } from 'zod'
-import dayjs from 'dayjs'
 
 export const UserDto = z.object({
   id: z.number(),
   email: z.email(),
   username: z.string().nullable(),
-  createdAt: z.coerce.date().transform(val => dayjs(val)),
-  updatedAt: z.coerce.date().transform(val => dayjs(val)),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
   metadata: z.record(z.string(), z.any()).nullable(),
 })
 

@@ -26,12 +26,11 @@ class Api {
     try {
       const fullUrl = this.buildUrl(path)
       const res = await fetch(fullUrl, init)
+      const result = await res.json()
 
       if (!res.ok) {
-        throw new Error(`Network response was not ok: ${res.statusText}`)
+        throw new Error(JSON.stringify(result))
       }
-
-      const result = await res.json()
 
       const validatedData = resDataSchema.parse(result.data)
 
@@ -40,11 +39,13 @@ class Api {
       console.error(`API client error ${init.method} ${path}:`, err)
 
       if (err instanceof ZodError) {
-        throw {
-          code: 'API_RESPONSE_VALIDATION_ERROR',
-          message: `Invalid response format: ${err.issues.map(issue => issue.path.join('.')).join(', ')}`,
-          extra: err.issues,
-        }
+        throw new Error(
+          JSON.stringify({
+            code: 'API_RESPONSE_VALIDATION_ERROR',
+            message: `Invalid response format: ${err.issues.map(issue => issue.path.join('.')).join(', ')}`,
+            extra: err.issues,
+          })
+        )
       }
 
       throw err as ApiErrorResponse
