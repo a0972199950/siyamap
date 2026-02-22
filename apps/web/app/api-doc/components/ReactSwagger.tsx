@@ -7,7 +7,7 @@ type Props = {
   spec: Record<string, any>
 }
 
-function ReactSwagger({ spec }: Props) {
+const ReactSwagger = ({ spec }: Props) => {
   return <SwaggerUI spec={spec} />
 }
 

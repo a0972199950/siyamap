@@ -1,14 +1,10 @@
 import { getApiDocs } from '@/lib/swagger'
-import ReactSwagger from './react-swagger'
+import ReactSwagger from './components/ReactSwagger'
 
 const PageApiDoc = async () => {
   const spec = await getApiDocs()
 
-  return (
-    <section>
-      <ReactSwagger spec={spec} />
-    </section>
-  )
+  return <ReactSwagger spec={spec} />
 }
 
 export default PageApiDoc
