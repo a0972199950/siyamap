@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import dayjs from 'dayjs'
+import dayjs from '@/lib/dayjs'
 import { Button, Icon, faSpinner } from '@siyamap/ui'
 import useUser from '../hooks/use-user'
 import { TUserDto } from '@/types/dto'

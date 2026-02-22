@@ -1,15 +1,9 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
-import dayjs from 'dayjs'
-import utc from 'dayjs/plugin/utc'
-import timezone from 'dayjs/plugin/timezone'
 import '@siyamap/ui/style.css'
 import './globals.css'
+import '@/lib/dayjs' // 初始化 dayjs 的 locale 和插件
 import QueryClientProvider from '@/components/providers/QueryClientProvider'
-
-dayjs.extend(utc)
-dayjs.extend(timezone)
-dayjs.tz.setDefault('Asia/Taipei')
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
