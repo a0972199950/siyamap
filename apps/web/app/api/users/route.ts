@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server'
 import userController from '@/server/modules/user/user.controller'
-
+// TODO: 改用一層 Hono 當作後端架構，因為 NEXTJS 沒有 middleware 的概念，所以無法在 route handler 之前做共用的前置處理（例如驗證、錯誤處理等），只能在每個 handler 裡面重複寫一次，這樣很麻煩也很容易出錯。Hono 是一個輕量級的 Node.js web 框架，支持 middleware，可以讓我們更方便地組織後端程式碼，並且可以在 route handler 之前做共用的前置處理。
 /**
  * @swagger
  * /api/users:

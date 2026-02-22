@@ -6,7 +6,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "dev": "storybook dev -p 6006 --no-open",
-    "build": "tsup src/index.ts --dts && storybook build",
+    "build": "tsup && storybook build",
     "build-storybook": "storybook build",
     "test": "vitest",
     "test:run": "vitest run",
@@ -21,7 +21,7 @@
     },
     "./Icon": {
       "types": "./dist/components/Icon/index.d.ts",
-      "import": "./dist/components/Icon/index.js", 
+      "import": "./dist/components/Icon/index.js",
       "require": "./dist/components/Icon/index.js"
     },
     "./style.css": "./dist/index.css"
