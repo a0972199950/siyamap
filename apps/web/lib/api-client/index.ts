@@ -1,5 +1,10 @@
 import { ZodError, z } from 'zod'
-import { TInsertUserDto, UserDto } from '@/types/dto'
+import {
+  TInsertUserDto,
+  TUserDto,
+  UserDto,
+  TCreateUploadUrlDto,
+} from '@/types/dto'
 import { ApiSuccessResponse, ApiErrorResponse } from '@/types'
 
 class Api {
@@ -20,7 +25,7 @@ class Api {
 
   private request = async <T>(
     path: string,
-    resDataSchema: z.ZodSchema<T>,
+    resDataSchema: z.ZodSchema<T> | null,
     init: RequestInit
   ) => {
     try {
@@ -32,9 +37,12 @@ class Api {
         throw new Error(JSON.stringify(result))
       }
 
-      const validatedData = resDataSchema.parse(result.data)
+      if (resDataSchema) {
+        const validatedData = resDataSchema.parse(result.data)
+        return { ...result, data: validatedData } as ApiSuccessResponse<T>
+      }
 
-      return { ...result, data: validatedData } as ApiSuccessResponse<T>
+      return result as ApiSuccessResponse<T>
     } catch (err) {
       console.error(`API client error ${init.method} ${path}:`, err)
 
@@ -54,7 +62,7 @@ class Api {
 
   public get = <T>(
     path: string,
-    resDataSchema: z.ZodSchema<T>,
+    resDataSchema: z.ZodSchema<T> | null,
     options: RequestInit & { query?: Record<string, any> } = {}
   ) => {
     const { query, ...reqConfig } = options
@@ -69,7 +77,7 @@ class Api {
 
   public post = <T>(
     path: string,
-    resDataSchema: z.ZodSchema<T>,
+    resDataSchema: z.ZodSchema<T> | null,
     options: RequestInit = {}
   ) => {
     const { headers: originalHeaders, ...restOptions } = options
@@ -87,9 +95,18 @@ class Api {
   }
 
   // users API
-  public getUsers = () => this.get('/api/users', z.array(UserDto))
+  public getUsers = () => this.get<TUserDto[]>('/api/users', z.array(UserDto))
+
   public insertUser = (payload: TInsertUserDto) =>
-    this.post('/api/users', UserDto, { body: JSON.stringify(payload) })
+    this.post<TUserDto>('/api/users', UserDto, {
+      body: JSON.stringify(payload),
+    })
+
+  // upload API
+  public getUploadUrl = (payload: TCreateUploadUrlDto) =>
+    this.post<string>('/api/upload/url', null, {
+      body: JSON.stringify(payload),
+    })
 }
 
 export default new Api()

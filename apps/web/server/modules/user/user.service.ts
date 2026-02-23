@@ -5,14 +5,14 @@ import users from './user.schema'
 class UserService {
   private users = users
 
-  async insert(dto: TInsertUserDto) {
+  public async insert(dto: TInsertUserDto) {
     const { password, confirmPassword, ...userData } = dto
 
     const [newUser] = await db.insert(this.users).values(userData).returning()
     return newUser
   }
 
-  async findAll() {
+  public async findAll() {
     const users = await db.select().from(this.users)
     return users
   }
