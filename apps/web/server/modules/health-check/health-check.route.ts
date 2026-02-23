@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { app } from '@/lib/hono'
 
 /**
  * @swagger
@@ -21,6 +21,6 @@ import { NextRequest, NextResponse } from 'next/server'
  *                   description: 健康檢查結果
  *                   example: true
  */
-export const GET = async (req: NextRequest) => {
-  return NextResponse.json({ result: true })
-}
+app.get('/health-check', c => {
+  return c.json({ result: true }, 200)
+})
