@@ -1,0 +1,49 @@
+@import "tailwindcss/theme";
+@import "../../styles/custom-theme.css";
+
+.button {
+  @apply flex items-center justify-center gap-1 cursor-pointer font-normal leading-none;
+  font-family: 'Noto Sans CJK TC';
+}
+
+.button--primary {
+  @apply text-white border-ui-primary-500;
+  background-color: var(--btn-custom-bg-color, var(--color-ui-primary-500));
+}
+
+.button--secondary {
+  @apply text-ui-primary-500 border-ui-primary-400;
+  background-color: var(--btn-custom-bg-color, var(--color-ui-primary-400));
+}
+
+.button--rounded-none {
+  @apply rounded-none;
+}
+
+.button--rounded-sm {
+  @apply rounded-sm;
+}
+
+.button--rounded-md {
+  @apply rounded-md;
+}
+
+.button--rounded-lg {
+  @apply rounded-lg;
+}
+
+.button--rounded-full {
+  @apply rounded-full;
+}
+
+.button--size-sm {
+  @apply text-sm px-4 py-3;
+}
+
+.button--size-md {
+  @apply text-base px-4 py-2;
+}
+
+.button--size-lg {
+  @apply text-lg px-6 py-3;
+}

@@ -1,0 +1,11 @@
+@theme {
+  /** Custom theme colors */
+  --color-ui-primary-500: #784BFF;
+  --color-ui-primary-400: #F1E5FF;
+  --color-ui-secondary-500: #EE82B4;
+  --color-ui-secondary-400: #DAA5BF;
+  --color-ui-secondary-300: #F5C8D7;
+  --color-ui-red: #FF0000;
+  --color-ui-green: #039F6C;
+  --color-ui-blue: #168FE8;
+}
