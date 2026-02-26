@@ -1,9 +1,12 @@
+import '@/lib/dayjs' // 初始化 dayjs 的 locale 和插件
+
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
+
+import QueryClientProvider from '@/components/providers/QueryClientProvider'
+
 import '@siyamap/ui/style.css'
 import './globals.css'
-import '@/lib/dayjs' // 初始化 dayjs 的 locale 和插件
-import QueryClientProvider from '@/components/providers/QueryClientProvider'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',

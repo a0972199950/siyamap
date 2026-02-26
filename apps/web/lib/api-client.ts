@@ -1,11 +1,13 @@
-import { ZodError, z } from 'zod'
+import { z,ZodError } from 'zod'
+
+import { ApiErrorResponse,ApiSuccessResponse } from '@/types'
 import {
+  TCreateFileDto,
+  TFileDto,
   TInsertUserDto,
   TUserDto,
   UserDto,
-  TCreateUploadUrlDto,
 } from '@/types/dto'
-import { ApiSuccessResponse, ApiErrorResponse } from '@/types'
 
 class Api {
   private getBaseUrl() {
@@ -34,7 +36,9 @@ class Api {
       const result = await res.json()
 
       if (!res.ok) {
-        throw new Error(JSON.stringify(result))
+        throw new Error('API 請求失敗', {
+          cause: result as ApiErrorResponse,
+        })
       }
 
       if (resDataSchema) {
@@ -44,19 +48,20 @@ class Api {
 
       return result as ApiSuccessResponse<T>
     } catch (err) {
-      console.error(`API client error ${init.method} ${path}:`, err)
+      console.error(`API client error ${init.method} ${path}`)
+      console.error(err)
 
       if (err instanceof ZodError) {
-        throw new Error(
-          JSON.stringify({
+        throw new Error('Response 回傳有問題', {
+          cause: {
             code: 'API_RESPONSE_VALIDATION_ERROR',
-            message: `Invalid response format: ${err.issues.map(issue => issue.path.join('.')).join(', ')}`,
-            extra: err.issues,
-          })
-        )
+            message: `Invalid response format: ${err.message}`,
+            details: err.issues,
+          } as ApiErrorResponse,
+        })
       }
 
-      throw err as ApiErrorResponse
+      throw err
     }
   }
 
@@ -97,15 +102,15 @@ class Api {
   // users API
   public getUsers = () => this.get<TUserDto[]>('/api/users', z.array(UserDto))
 
-  public insertUser = (payload: TInsertUserDto) =>
+  public insertUser = (dto: TInsertUserDto) =>
     this.post<TUserDto>('/api/users', UserDto, {
-      body: JSON.stringify(payload),
+      body: JSON.stringify(dto),
     })
 
   // upload API
-  public getUploadUrl = (payload: TCreateUploadUrlDto) =>
-    this.post<string>('/api/upload/url', null, {
-      body: JSON.stringify(payload),
+  public createFile = (dto: TCreateFileDto) =>
+    this.post<{ file: TFileDto; uploadUrl: string }>('/api/files', null, {
+      body: JSON.stringify(dto),
     })
 }
 

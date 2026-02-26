@@ -26,6 +26,7 @@ jobs:
       IMAGE_TAG: ${{ github.sha }}
       DATABASE_URL: ${{ secrets.DATABASE_URL_STAGE }}
       NEXT_PUBLIC_API_BASE_URL: https://stage.siyamap.com
+      NEXT_PUBLIC_IMAGE_BASE_URL: https://cdn.siyamap.com
 
     steps:
       # [START] 共同建置與部署流程

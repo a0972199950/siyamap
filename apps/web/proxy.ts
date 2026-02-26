@@ -1,5 +1,6 @@
+import { NextProxy,NextRequest, NextResponse } from 'next/server'
+
 import { chain, FunctionFactory } from '@/utils/chain'
-import { NextRequest, NextResponse, NextProxy } from 'next/server'
 
 const DEV_ONLY_ROUTES = ['/api-doc']
 const withDevOnly: FunctionFactory<NextProxy> = (nextProxy: NextProxy) => {

@@ -1,5 +1,6 @@
 import db from '@/lib/db'
 import { TInsertUserDto } from '@/types/dto'
+
 import users from './user.schema'
 
 class UserService {

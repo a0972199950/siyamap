@@ -1,11 +1,13 @@
 'use client'
 
-import React from 'react'
-import dayjs from '@/lib/dayjs'
 import { Button, Icon } from '@siyamap/ui'
 import { faSpinner } from '@siyamap/ui'
-import useUser from '../hooks/use-user'
+import React from 'react'
+
+import dayjs from '@/lib/dayjs'
 import { TUserDto } from '@/types/dto'
+
+import useUser from '../hooks/use-user'
 
 interface Props {
   initialUsers: TUserDto[]

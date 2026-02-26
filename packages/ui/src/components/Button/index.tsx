@@ -1,7 +1,7 @@
-import React from "react"
-import clsx from 'clsx';
-import styles from "./index.module.css"
-import { UiColors } from "../../types/common"
+import React from 'react'
+import clsx from 'clsx'
+import styles from './index.module.css'
+import { UiColors } from '../../types/common'
 import Icon from '../Icon'
 
 export interface Props extends React.HTMLAttributes<HTMLButtonElement> {
@@ -15,7 +15,16 @@ export interface Props extends React.HTMLAttributes<HTMLButtonElement> {
 }
 
 const Button = (props: Props): React.ReactElement => {
-  const { type = 'primary', color, rounded = 'full', size = 'sm', icon, className, children } = props
+  const {
+    type = 'primary',
+    color,
+    rounded = 'full',
+    size = 'sm',
+    icon,
+    className,
+    children,
+    ...rest
+  } = props
 
   const classes = clsx(
     styles['button'],
@@ -28,9 +37,12 @@ const Button = (props: Props): React.ReactElement => {
   return (
     <button
       className={classes}
-      style={{
-        '--btn-custom-bg-color': `var(--color-ui-${color})`
-      } as React.CSSProperties}
+      style={
+        {
+          '--btn-custom-bg-color': `var(--color-ui-${color})`,
+        } as React.CSSProperties
+      }
+      {...rest}
     >
       {icon && <Icon icon={icon} size={size} />}
       {children}

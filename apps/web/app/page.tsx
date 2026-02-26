@@ -1,10 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import Image from 'next/image'
+import { useEffect,useState } from 'react'
+
+import duoduo from '@/public/public/duoduo.jpeg'
 import guagua from '@/public/public/guagua.jpg'
 import purdin from '@/public/public/purdin.jpg'
-import duoduo from '@/public/public/duoduo.jpeg'
 
 export default function Home() {
   const [confetti, setConfetti] = useState<

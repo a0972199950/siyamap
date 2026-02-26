@@ -1,8 +1,10 @@
-import { NextPage } from 'next'
 import { Button } from '@siyamap/ui'
-import { createUser } from './actions'
+import { NextPage } from 'next'
+
 import db from '@/lib/db'
 import { users } from '@/server/schema'
+
+import { createUser } from './actions'
 
 const PageProfile: NextPage = async () => {
   // 在 Server Component 中直接讀取資料

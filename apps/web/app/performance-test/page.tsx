@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useTransition, useEffect, useRef } from 'react'
+import { useEffect, useRef,useState, useTransition } from 'react'
+
 import { fetchHeavyData } from './actions'
 
 function SlowComponent({ index }: { index: number }) {

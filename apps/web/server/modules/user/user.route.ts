@@ -1,7 +1,8 @@
 import { app } from '@/lib/hono'
-import userController from './user.controller'
 import { bodyValidator } from '@/server/middlewares/validator.middleware'
 import { InsertUserDto } from '@/types/dto'
+
+import userController from './user.controller'
 
 /**
  * @swagger

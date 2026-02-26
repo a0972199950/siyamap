@@ -1,6 +1,7 @@
-import { TypedResponse } from 'hono'
 import { zValidator } from '@hono/zod-validator'
-import { ZodType } from 'zod'
+import { TypedResponse } from 'hono'
+import { ZodError,ZodType } from 'zod'
+
 import { ApiErrorResponse } from '@/types'
 
 class BodyValidator {
@@ -16,6 +17,7 @@ class BodyValidator {
             {
               code: 'API_REQUEST_VALIDATION_ERROR',
               message: result.error.message,
+              details: (result.error as ZodError).issues,
             },
             400
           )

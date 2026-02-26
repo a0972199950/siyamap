@@ -16,6 +16,7 @@ export type ApiSuccessResponse<T> = {
 export type ApiErrorResponse = {
   code: ErrorCode
   message?: string
+  details?: any
 }
 
 export type ApiResponse<T> = ApiSuccessResponse<T> | ApiErrorResponse

@@ -1,7 +1,8 @@
-import React from 'react'
-import { getErrorConfig } from '@/utils/error-config'
-import { ApiErrorResponse } from '@/types/index'
 import { Button } from '@siyamap/ui'
+import React from 'react'
+
+import { ApiErrorResponse } from '@/types/index'
+import { getErrorConfig } from '@/utils/error-config'
 
 export interface Props {
   error: Error & { digest?: string }
@@ -11,26 +12,27 @@ export interface Props {
 const PageError = (props: Props) => {
   const { error, reset } = props
 
-  const errorInfo = React.useMemo<ApiErrorResponse>(() => {
-    try {
-      return JSON.parse(error.message)
-    } catch {
+  const errorCause = React.useMemo<ApiErrorResponse>(() => {
+    if (
+      error.cause &&
+      typeof error.cause === 'object' &&
+      'code' in error.cause
+    ) {
+      return error.cause as ApiErrorResponse
+    } else {
       return {
         code: 'UNKNOWN_ERROR',
       }
     }
   }, [error.message])
 
-  const errorConfig = getErrorConfig(errorInfo)
+  const errorConfig = getErrorConfig(errorCause)
 
   return (
     <div className="flex min-h-[400px] flex-col items-center justify-center rounded-lg border border-gray-200 bg-white p-6 text-center shadow-sm">
       <h2 className="mb-2 text-2xl font-bold text-gray-800">
         {errorConfig.displayMessage}
       </h2>
-      <p className="mx-auto mb-6 max-w-md text-gray-600">
-        {errorConfig.message}
-      </p>
 
       {/* 3. 按鈕區域 */}
       <div className="flex gap-4">
@@ -48,16 +50,9 @@ const PageError = (props: Props) => {
           Debug Info:
         </p>
         <pre className="text-[10px] leading-tight text-red-700">
-          {JSON.stringify(
-            {
-              code: errorInfo.code,
-              digest: error.digest,
-              message: error.message,
-              stack: error.stack,
-            },
-            null,
-            2
-          )}
+          {JSON.stringify(errorConfig, null, 2)}
+          <br />
+          {error.stack}
         </pre>
       </div>
     </div>

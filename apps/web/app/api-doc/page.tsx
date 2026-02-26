@@ -1,4 +1,5 @@
 import { getApiDocs } from '@/lib/swagger'
+
 import ReactSwagger from './components/ReactSwagger'
 
 const PageApiDoc = async () => {

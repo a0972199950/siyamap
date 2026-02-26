@@ -1,31 +1,42 @@
 'use client'
 
-import React from 'react'
 import { NextPage } from 'next'
+import React from 'react'
+
 import api from '@/lib/api-client'
 
 const PageUpload: NextPage = () => {
+  const [error, setError] = React.useState<Error | null>(null)
+
+  if (error) {
+    throw error
+  }
+
   const [file, setFile] = React.useState<File | null>(null)
 
   const handleUpload = async () => {
-    const { data: uploadUrl } = await api.getUploadUrl({
-      fileType: file!.type,
-    })
+    try {
+      const { data } = await api.createFile({
+        fileType: file!.type,
+      })
 
-    console.log('Upload URL:', uploadUrl)
+      console.log('Upload URL:', data.uploadUrl)
 
-    const res = await fetch(uploadUrl, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': file!.type,
-      },
-      body: file,
-    })
+      const res = await fetch(data.uploadUrl, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': file!.type,
+        },
+        body: file,
+      })
 
-    if (res.ok) {
-      alert('檔案上傳成功！')
-    } else {
-      alert('檔案上傳失敗！')
+      if (res.ok) {
+        window.open(data.file.url, '_blank')
+      } else {
+        alert('檔案上傳失敗！')
+      }
+    } catch (err) {
+      setError(err as Error)
     }
   }
 
