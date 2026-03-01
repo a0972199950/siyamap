@@ -4,6 +4,7 @@ import { NextPage } from 'next'
 import React from 'react'
 
 import api from '@/lib/api-client'
+import logger from '@/utils/logger'
 
 const PageUpload: NextPage = () => {
   const [error, setError] = React.useState<Error | null>(null)
@@ -20,7 +21,7 @@ const PageUpload: NextPage = () => {
         fileType: file!.type,
       })
 
-      console.log('Upload URL:', data.uploadUrl)
+      logger.log('Upload URL:', data.uploadUrl)
 
       const res = await fetch(data.uploadUrl, {
         method: 'PUT',

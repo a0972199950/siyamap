@@ -15,3 +15,10 @@ export const CreateFileDto = z.object({
 })
 
 export type TCreateFileDto = z.infer<typeof CreateFileDto>
+
+export const CreateFileResDto = z.object({
+  file: FileDto,
+  uploadUrl: z.url(),
+})
+
+export type TCreateFileResDto = z.infer<typeof CreateFileResDto>

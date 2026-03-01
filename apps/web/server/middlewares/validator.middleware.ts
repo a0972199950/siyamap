@@ -1,8 +1,9 @@
 import { zValidator } from '@hono/zod-validator'
 import { TypedResponse } from 'hono'
-import { ZodError,ZodType } from 'zod'
+import { ZodError, ZodType } from 'zod'
 
 import { ApiErrorResponse } from '@/types'
+import logger from '@/utils/logger'
 
 class BodyValidator {
   public json(dto: ZodType<any>) {
@@ -11,7 +12,7 @@ class BodyValidator {
       dto,
       (result, c): TypedResponse<ApiErrorResponse> | void => {
         if (!result.success) {
-          console.log('Validation error:', result.error)
+          logger.log('Validation error:', result.error)
 
           return c.json(
             {

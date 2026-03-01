@@ -5,5 +5,7 @@ type ErrorCode =
   | 'VALIDATION_ERROR' // 驗證錯誤
   | 'INTERNAL_SERVER_ERROR' // 內部伺服器錯誤
   | 'UNKNOWN_ERROR' // 未知錯誤
+  | 'MISSING_GOOGLE_AUTH_CODE' // Google 認證碼缺失
+  | 'CSRF_ERROR' // CSRF 驗證錯誤
 
 export default ErrorCode

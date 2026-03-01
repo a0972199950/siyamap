@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache'
 
 import db from '@/lib/db' // 你的 Drizzle 連線實體
 import { users } from '@/server/schema' // 你的 Schema 定義
+import logger from '@/utils/logger'
 
 export async function createUser(formData: FormData) {
   // 1. 從表單中提取資料
@@ -22,6 +23,6 @@ export async function createUser(formData: FormData) {
     // 3. 告訴 Next.js 重新整理頁面快取，讓新資料立刻顯示
     revalidatePath('/')
   } catch (error) {
-    console.error('建立使用者失敗:', error)
+    logger.error('建立使用者失敗:', error)
   }
 }

@@ -1,11 +1,13 @@
 'use client'
 
-import { useEffect, useRef,useState, useTransition } from 'react'
+import { useEffect, useRef, useState, useTransition } from 'react'
+
+import logger from '@/utils/logger'
 
 import { fetchHeavyData } from './actions'
 
 function SlowComponent({ index }: { index: number }) {
-  console.log(`Rendering item ${index}`)
+  logger.log(`Rendering item ${index}`)
   const startTime = performance.now()
   // 保持 0.05ms 的負擔，模擬真實複雜組件
   while (performance.now() - startTime < 0.05) {}

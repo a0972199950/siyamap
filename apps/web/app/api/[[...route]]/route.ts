@@ -1,6 +1,7 @@
 import '@/server/modules/health-check/health-check.route'
 import '@/server/modules/user/user.route'
 import '@/server/modules/file/file.route'
+import '@/server/modules/oauth/oauth.route'
 
 import { app, handle } from '@/lib/hono'
 

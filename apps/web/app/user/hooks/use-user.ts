@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import api from '@/lib/api-client'
 import { TUserDto } from '@/types/dto'
+import logger from '@/utils/logger'
 
 const useUser = (initialUsers: TUserDto[]) => {
   const queryClient = useQueryClient()
@@ -14,7 +15,7 @@ const useUser = (initialUsers: TUserDto[]) => {
 
         return data
       } catch (err) {
-        console.error('Failed to fetch users:', err)
+        logger.error('Failed to fetch users:', err)
         return []
       }
     },
@@ -37,7 +38,7 @@ const useUser = (initialUsers: TUserDto[]) => {
     },
 
     onError: err => {
-      console.error('Error creating user:', err)
+      logger.error('Error creating user:', err)
     },
   })
 

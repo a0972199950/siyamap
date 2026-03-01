@@ -4,6 +4,7 @@ export const UserDto = z.object({
   id: z.number(),
   email: z.email('信箱格式不正確'),
   username: z.string().optional(),
+  picture: z.string().optional(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
   metadata: z.record(z.string(), z.any()).optional(),
@@ -14,6 +15,7 @@ export type TUserDto = z.infer<typeof UserDto>
 export const InsertUserDto = UserDto.pick({
   email: true,
   username: true,
+  picture: true,
   metadata: true,
 })
   .extend({

@@ -20,3 +20,8 @@ export type ApiErrorResponse = {
 }
 
 export type ApiResponse<T> = ApiSuccessResponse<T> | ApiErrorResponse
+
+export interface OAuthState {
+  csrfToken: string
+  from: string
+}

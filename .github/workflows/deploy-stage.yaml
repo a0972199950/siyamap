@@ -25,8 +25,10 @@ jobs:
       ECR_REPOSITORY: siyamap/nextjs
       IMAGE_TAG: ${{ github.sha }}
       DATABASE_URL: ${{ secrets.DATABASE_URL_STAGE }}
-      NEXT_PUBLIC_API_BASE_URL: https://stage.siyamap.com
+      NEXT_PUBLIC_API_BASE_URL: https://stage.siyamap.com/api
       NEXT_PUBLIC_IMAGE_BASE_URL: https://cdn.siyamap.com
+      NEXT_PUBLIC_OAUTH_CALLBACK_GOOGLE: /oauth/google/callback
+      NEXT_PUBLIC_GOOGLE_CLIENT_ID: 675328744936-1jnflejn1rqu2gsp2i3k422fr99ohi8i.apps.googleusercontent.com
 
     steps:
       # [START] 共同建置與部署流程

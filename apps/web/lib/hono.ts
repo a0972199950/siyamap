@@ -1,10 +1,12 @@
 import { Hono } from 'hono'
 import { handle } from 'hono/vercel'
 
+import logger from '@/utils/logger'
+
 const app = new Hono().basePath('/api')
 
 app.onError((err, c) => {
-  console.error(err)
+  logger.error(err)
 
   return c.json(
     {
