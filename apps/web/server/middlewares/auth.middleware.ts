@@ -3,9 +3,8 @@ import { createMiddleware } from 'hono/factory'
 import { jwtVerify } from 'jose'
 
 import { Variables } from '@/lib/hono'
+import userService from '@/server/modules/user/user.service'
 import logger from '@/utils/logger'
-
-import userService from '../modules/user/user.service'
 
 class AuthMiddleware {
   setUser = createMiddleware<{ Variables: Variables }>(async (c, next) => {

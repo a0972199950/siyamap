@@ -1,4 +1,4 @@
-import { NextProxy,NextRequest, NextResponse } from 'next/server'
+import { NextProxy, NextRequest, NextResponse } from 'next/server'
 
 import { chain, FunctionFactory } from '@/utils/chain'
 
@@ -20,8 +20,32 @@ const withDevOnly: FunctionFactory<NextProxy> = (nextProxy: NextProxy) => {
   return currentProxy
 }
 
+const LOGGEDIN_ONLY_ROUTES = ['/user']
+const withLoggedInOnly: FunctionFactory<NextProxy> = (nextProxy: NextProxy) => {
+  const currentProxy: NextProxy = async (request: NextRequest, _event) => {
+    const { pathname } = request.nextUrl
+    const isLoggedIn = !!request.cookies.get('session')
+
+    if (
+      LOGGEDIN_ONLY_ROUTES.some(route => pathname.startsWith(route)) &&
+      !isLoggedIn
+    ) {
+      const loginUrl = new URL('/login', request.url)
+      loginUrl.searchParams.set('from', pathname)
+
+      return NextResponse.redirect(loginUrl) // 如果沒有 session cookie，重定向到登入頁面
+    }
+
+    return nextProxy(request, _event)
+  }
+
+  return currentProxy
+}
+
 // 這裡的順序決定了執行的優先級
-export default chain([withDevOnly], 0, () => NextResponse.next())
+export default chain([withDevOnly, withLoggedInOnly], 0, () =>
+  NextResponse.next()
+)
 
 export const config = {
   // 匹配所有路徑，由內部的邏輯自行判斷是否攔截

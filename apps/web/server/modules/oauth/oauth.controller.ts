@@ -1,11 +1,10 @@
-import { getCookie, setCookie } from 'hono/cookie'
+import { deleteCookie, getCookie, setCookie } from 'hono/cookie'
 import { SignJWT } from 'jose'
 
 import { Handler } from '@/lib/hono'
+import userService from '@/server/modules/user/user.service'
 import { TGetLoginUrlDto } from '@/types/dto'
 import ResponseFormatter from '@/utils/response-formatter'
-
-import userService from '../user/user.service'
 
 import oauthService from './oauth.service'
 
@@ -48,7 +47,7 @@ class OauthController extends ResponseFormatter {
       Buffer.from(state, 'base64').toString('utf-8')
     )
 
-    setCookie(c, 'csrf_token', '')
+    deleteCookie(c, 'csrf_token')
 
     if (csrfToken !== storedCsrfToken) {
       return this.formatErrorResponse(c, 403, {
