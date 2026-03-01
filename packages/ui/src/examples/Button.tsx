@@ -1,16 +1,16 @@
-import Button from '../components/Button';
-import Icon from '../components/Icon';
 import {
+  faCheck,
   faDownload,
+  faEdit,
+  faMinus,
+  faPlus,
   faShare,
   faSpinner,
-  faPlus,
-  faMinus,
-  faEdit,
-  faTrash,
-  faCheck,
-  faTimes
-} from '@fortawesome/free-solid-svg-icons';
+  faTimes,
+  faTrash} from '@fortawesome/free-solid-svg-icons'
+
+import Button from '../components/Button'
+import Icon from '../components/Icon'
 
 /**
  * Button 組件使用範例
@@ -261,5 +261,5 @@ import { faDownload } from '@siyamap/ui/Icon';
         </div>
       </section>
     </div>
-  );
+  )
 }

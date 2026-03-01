@@ -1,11 +1,11 @@
-import type { Meta, StoryObj } from '@storybook/react-vite';
-import Icon from './index';
+import { faGithub, faTwitter } from '@fortawesome/free-brands-svg-icons'
 import {
   faHome,
   faSpinner,
+} from '@fortawesome/free-solid-svg-icons'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
-} from '@fortawesome/free-solid-svg-icons';
-import { faGithub, faTwitter } from '@fortawesome/free-brands-svg-icons';
+import Icon from './index'
 
 const meta = {
   component: Icon,
@@ -64,9 +64,9 @@ const meta = {
       options: [undefined, 90, 180, 270]
     },
   }
-} satisfies Meta<typeof Icon>;
+} satisfies Meta<typeof Icon>
 
-export default meta;
+export default meta
 
 type Story = StoryObj<typeof Icon>;
 
@@ -74,7 +74,7 @@ export const Playground: Story = {
   args: {
     icon: faHome,
   }
-};
+}
 
 export const Spin: Story = {
   args: {

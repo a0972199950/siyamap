@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite"
+
+import { faArrowRightToBracket,faHeart } from '../Icon'
+
 import Button from "./index"
-import { faHeart, faArrowRightToBracket } from '../Icon'
 
 const meta = {
   component: Button,
@@ -44,7 +46,7 @@ const meta = {
       description: "按鈕內容"
     }
   }
-} satisfies Meta<typeof Button>;
+} satisfies Meta<typeof Button>
 
 export default meta
 
@@ -55,7 +57,7 @@ export const Playground: Story = {
     children: "中文 English",
     type: "primary"
   }
-};
+}
 
 export const Primary: Story = {
   args: {

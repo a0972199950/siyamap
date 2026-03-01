@@ -1,5 +1,5 @@
-import { defineConfig } from 'tsup';
-import { sassPlugin } from "esbuild-sass-plugin";
+import { sassPlugin } from "esbuild-sass-plugin"
+import { defineConfig } from 'tsup'
 
 export default defineConfig({
   entry: [
@@ -20,6 +20,6 @@ export default defineConfig({
   esbuildOptions(options) {
     options.banner = {
       js: '"use client"'
-    };
+    }
   }
-});
+})

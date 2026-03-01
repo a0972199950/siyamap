@@ -1,9 +1,11 @@
-import React from 'react'
-import { FontAwesomeIcon, AnimationProps } from '@fortawesome/react-fontawesome'
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core'
+import { AnimationProps,FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import clsx from 'clsx'
-import styles from './index.module.css'
+import React from 'react'
+
 import { UiColors } from '../../types/common'
+
+import styles from './index.module.css'
 
 export interface Props extends React.HTMLAttributes<HTMLSpanElement> {
   /**

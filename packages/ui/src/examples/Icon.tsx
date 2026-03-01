@@ -1,17 +1,17 @@
-import Icon from '../components/Icon';
+import { faGithub, faTwitter } from '@fortawesome/free-brands-svg-icons'
 import {
-  faHome,
-  faUser,
-  faSearch,
-  faHeart,
-  faStar,
-  faSpinner,
-  faDownload,
-  faShare,
   faCheck,
-  faTimes
-} from '@fortawesome/free-solid-svg-icons';
-import { faGithub, faTwitter } from '@fortawesome/free-brands-svg-icons';
+  faDownload,
+  faHeart,
+  faHome,
+  faSearch,
+  faShare,
+  faSpinner,
+  faStar,
+  faTimes,
+  faUser} from '@fortawesome/free-solid-svg-icons'
+
+import Icon from '../components/Icon'
 
 /**
  * Icon 組件使用範例
@@ -232,5 +232,5 @@ import { faHome, faUser, faSpinner } from '@siyamap/ui/Icon';
         </div>
       </section>
     </div>
-  );
+  )
 }

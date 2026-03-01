@@ -1,8 +1,10 @@
-import React from 'react'
 import clsx from 'clsx'
-import styles from './index.module.css'
+import React from 'react'
+
 import { UiColors } from '../../types/common'
 import Icon from '../Icon'
+
+import styles from './index.module.css'
 
 export interface Props extends React.HTMLAttributes<HTMLButtonElement> {
   type?: 'primary' | 'secondary'

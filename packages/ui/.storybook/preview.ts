@@ -1,4 +1,5 @@
 import type { Preview } from '@storybook/react-vite'
+
 import '@/src/styles/global.css'
 
 const preview: Preview = {
@@ -17,6 +18,6 @@ const preview: Preview = {
       test: 'todo'
     }
   },
-};
+}
 
-export default preview;
+export default preview
