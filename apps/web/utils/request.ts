@@ -1,9 +1,10 @@
 import { ApiErrorResponse } from '@/types'
 import logger from '@/utils/logger'
 
-interface RequestOptions extends Omit<RequestInit, 'method' | 'body'> {
+interface RequestOptions extends Omit<RequestInit, 'method'> {
   params?: Record<string, any>
   body?: any
+  disableCookies?: boolean // 選項：在 SSR 時禁用自動 cookie
 }
 
 export class RequestClient {
@@ -13,12 +14,40 @@ export class RequestClient {
     this.baseURL = baseURL
   }
 
+  // 在 SSR 環境中獲取 cookie
+  private async getSSRCookies(): Promise<string | null> {
+    // 檢查是否在服務端環境
+    if (typeof window !== 'undefined') {
+      return null // 客戶端不需要處理
+    }
+
+    try {
+      // 動態導入 Next.js cookies 函數 (App Router)
+      const { cookies } = await import('next/headers')
+      const cookieStore = await cookies()
+
+      // 將所有 cookie 轉換為字串
+      const cookieString = cookieStore.toString()
+      return cookieString || null
+    } catch (error) {
+      // 如果無法獲取 cookie (可能在 Pages Router 或其他環境)
+      logger.debug('Unable to get SSR cookies:', error)
+      return null
+    }
+  }
+
   private async handleRequest<T = any>(
     pathOrUrl: string,
     method: string,
     options: RequestOptions = {}
   ): Promise<T> {
-    const { params, body, headers = {}, ...fetchOptions } = options
+    const {
+      params,
+      body,
+      disableCookies,
+      headers = {},
+      ...fetchOptions
+    } = options
 
     // 構建完整的 URL
     let fullUrl: string
@@ -52,7 +81,19 @@ export class RequestClient {
         'Content-Type': 'application/json',
         ...headers,
       },
+      credentials: 'include', // 自動包含 cookie
       ...fetchOptions,
+    }
+
+    // 在 SSR 環境中自動添加 cookie
+    if (!disableCookies) {
+      const ssrCookies = await this.getSSRCookies()
+      if (ssrCookies) {
+        requestConfig.headers = {
+          ...requestConfig.headers,
+          Cookie: ssrCookies,
+        }
+      }
     }
 
     // 處理請求體

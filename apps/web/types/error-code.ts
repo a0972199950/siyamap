@@ -7,5 +7,6 @@ type ErrorCode =
   | 'UNKNOWN_ERROR' // 未知錯誤
   | 'MISSING_GOOGLE_AUTH_CODE' // Google 認證碼缺失
   | 'CSRF_ERROR' // CSRF 驗證錯誤
+  | 'UNAUTHORIZED' // 未授權
 
 export default ErrorCode

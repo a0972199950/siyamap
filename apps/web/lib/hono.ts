@@ -1,9 +1,19 @@
-import { Hono } from 'hono'
+import { Handler as HonoHandler, Hono } from 'hono'
 import { handle } from 'hono/vercel'
 
+import authMiddleware from '@/server/middlewares/auth.middleware'
+import { User } from '@/server/schema'
 import logger from '@/utils/logger'
 
-const app = new Hono().basePath('/api')
+export type Variables = {
+  user?: User
+}
+
+export type Handler = HonoHandler<{ Variables: Variables }>
+
+const app = new Hono<{ Variables: Variables }>().basePath('/api')
+
+app.use('*', authMiddleware.setUser)
 
 app.onError((err, c) => {
   logger.error(err)

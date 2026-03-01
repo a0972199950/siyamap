@@ -7,7 +7,7 @@ import s3Client from '@/lib/aws-s3-client'
 import db from '@/lib/db'
 import { TCreateFileDto } from '@/types/dto'
 
-import files from './file.schema'
+import { files } from './file.schema'
 
 class FileService {
   public async createFile(dto: TCreateFileDto) {

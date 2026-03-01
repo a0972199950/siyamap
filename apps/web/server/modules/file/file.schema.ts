@@ -1,6 +1,6 @@
 import { pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core'
 
-const files = pgTable('files', {
+export const files = pgTable('files', {
   id: serial('id').primaryKey(),
 
   url: text('url').notNull(),
@@ -23,5 +23,4 @@ const files = pgTable('files', {
     .$onUpdate(() => new Date()),
 })
 
-export default files
 export type File = typeof files.$inferSelect

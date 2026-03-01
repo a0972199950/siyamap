@@ -1,8 +1,7 @@
-import { Handler } from 'hono'
 import { getCookie, setCookie } from 'hono/cookie'
 import { SignJWT } from 'jose'
-import { set } from 'zod'
 
+import { Handler } from '@/lib/hono'
 import { TGetLoginUrlDto } from '@/types/dto'
 import ResponseFormatter from '@/utils/response-formatter'
 

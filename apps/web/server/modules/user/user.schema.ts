@@ -1,6 +1,6 @@
 import { jsonb, pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core'
 
-const users = pgTable('users', {
+export const users = pgTable('users', {
   id: serial('id').primaryKey(),
 
   email: text('email').notNull().unique(),
@@ -31,5 +31,4 @@ const users = pgTable('users', {
 //   posts: many(users), // 指向其他模組的 model
 // }));
 
-export default users
 export type User = typeof users.$inferSelect

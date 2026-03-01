@@ -6,7 +6,7 @@ import { ApiErrorResponse } from '@/types'
 import logger from '@/utils/logger'
 
 class BodyValidator {
-  public json(dto: ZodType<any>) {
+  json(dto: ZodType<any>) {
     return zValidator(
       'json',
       dto,

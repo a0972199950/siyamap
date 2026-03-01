@@ -1,5 +1,4 @@
-import { Handler } from 'hono'
-
+import { Handler } from '@/lib/hono'
 import { TInsertUserDto } from '@/types/dto'
 import ResponseFormatter from '@/utils/response-formatter'
 

@@ -1,4 +1,5 @@
 import { app } from '@/lib/hono'
+import authMiddleware from '@/server/middlewares/auth.middleware'
 import { bodyValidator } from '@/server/middlewares/validator.middleware'
 import { InsertUserDto } from '@/types/dto'
 
@@ -102,7 +103,12 @@ import userController from './user.controller'
  *                   type: string
  *                   example: "內部伺服器錯誤"
  */
-app.post('/users', bodyValidator.json(InsertUserDto), userController.insert)
+app.post(
+  '/users',
+  authMiddleware.requireLoggedIn,
+  bodyValidator.json(InsertUserDto),
+  userController.insert
+)
 
 /**
  * @swagger

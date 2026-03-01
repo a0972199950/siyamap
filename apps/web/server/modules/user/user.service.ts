@@ -1,41 +1,47 @@
-import { eq } from 'drizzle-orm'
+import { and, eq, SQLWrapper } from 'drizzle-orm'
 
 import db from '@/lib/db'
 import { TInsertUserDto } from '@/types/dto'
 
-import users from './user.schema'
+import { User, users } from './user.schema'
 
 class UserService {
   private users = users
 
-  public async insert(
-    dto: Omit<TInsertUserDto, 'password' | 'confirmPassword'>
-  ) {
+  async insert(dto: Omit<TInsertUserDto, 'password' | 'confirmPassword'>) {
     const [newUser] = await db.insert(this.users).values(dto).returning()
     return newUser
   }
 
-  public async findAll() {
+  async findAll() {
     const users = await db.select().from(this.users)
     return users
   }
 
-  public async findByEmail(email: string) {
+  async findOne(query: Partial<User>) {
+    const filters: SQLWrapper[] = []
+
+    Object.entries(query).forEach(([key, value]) => {
+      if (value) {
+        filters.push(eq(this.users[key as keyof User], value))
+      }
+    })
+
     const [user] = await db
       .select()
       .from(this.users)
-      .where(eq(this.users.email, email))
+      .where(and(...filters))
       .limit(1)
 
     return user
   }
 
-  public async findOrInsert(
+  async findOrInsert(
     userInfo: Omit<TInsertUserDto, 'password' | 'confirmPassword'>
   ) {
     const { email, username, picture } = userInfo
 
-    let user = await this.findByEmail(email)
+    let user = await this.findOne({ email })
 
     if (!user) {
       user = await this.insert({
