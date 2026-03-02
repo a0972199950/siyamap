@@ -18,7 +18,7 @@ import oauthController from './oauth.controller'
  *           type: string
  *           format: uri
  *           description: 登入成功後要重定向的網址
- *           example: "https://example.com/dashboard"
+ *           example: "/api-doc"
  *     responses:
  *       200:
  *         description: 成功生成 Google 登入網址

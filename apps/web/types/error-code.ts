@@ -8,5 +8,8 @@ type ErrorCode =
   | 'MISSING_GOOGLE_AUTH_CODE' // Google 認證碼缺失
   | 'CSRF_ERROR' // CSRF 驗證錯誤
   | 'UNAUTHORIZED' // 未授權
+  | 'USER_NOT_FOUND' // 使用者不存在
+  | 'USER_EXISTS' // 使用者已存在
+  | 'USER_FROM_OAUTH' // 此帳號來自 OAuth，沒有密碼
 
 export default ErrorCode

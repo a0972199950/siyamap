@@ -1,4 +1,14 @@
-import { jsonb, pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core'
+import {
+  jsonb,
+  pgEnum,
+  pgTable,
+  serial,
+  text,
+  timestamp,
+} from 'drizzle-orm/pg-core'
+
+// 必須 export，pnpm db:push 才能知道有這個 enum
+export const UserRole = pgEnum('user_role', ['ADMIN', 'USER'])
 
 export const users = pgTable('users', {
   id: serial('id').primaryKey(),
@@ -7,7 +17,11 @@ export const users = pgTable('users', {
 
   username: text('username'),
 
+  password: text('password'),
+
   picture: text('picture'),
+
+  role: UserRole('role').notNull().default('USER'),
 
   createdAt: timestamp('created_at', {
     mode: 'date',

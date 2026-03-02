@@ -1,3 +1,4 @@
+import bcrypt from 'bcryptjs'
 import { and, eq, SQLWrapper } from 'drizzle-orm'
 
 import db from '@/lib/db'
@@ -5,11 +6,33 @@ import { TInsertUserDto } from '@/types/dto'
 
 import { User, users } from './user.schema'
 
+interface InsertUserProps extends Omit<
+  TInsertUserDto,
+  'confirmPassword' | 'password'
+> {
+  password?: string
+}
+
 class UserService {
   private users = users
 
-  async insert(dto: Omit<TInsertUserDto, 'password' | 'confirmPassword'>) {
-    const [newUser] = await db.insert(this.users).values(dto).returning()
+  async insert(dto: InsertUserProps) {
+    if (!dto.password) {
+      const [newUser] = await db
+        .insert(this.users)
+        .values({ ...dto, password: null })
+        .returning()
+      return newUser
+    }
+
+    const saltRounds = 10
+    const hashedPassword = bcrypt.hashSync(dto.password, saltRounds)
+
+    const [newUser] = await db
+      .insert(this.users)
+      .values({ ...dto, password: hashedPassword })
+      .returning()
+
     return newUser
   }
 
@@ -41,14 +64,10 @@ class UserService {
   ) {
     const { email, username, picture } = userInfo
 
-    let user = await this.findOne({ email })
+    let user: any = await this.findOne({ email })
 
     if (!user) {
-      user = await this.insert({
-        email,
-        username,
-        picture,
-      })
+      user = await this.insert(userInfo)
     }
 
     return user

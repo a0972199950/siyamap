@@ -46,7 +46,7 @@ class AuthMiddleware {
         return c.json(
           {
             code: 'UNAUTHORIZED',
-            message: 'User not logged in',
+            message: '使用者未登入',
           },
           401
         )
@@ -55,6 +55,24 @@ class AuthMiddleware {
       return next()
     }
   )
+
+  requireAdmin = createMiddleware<{ Variables: Variables }>(async (c, next) => {
+    const user = c.get('user')
+
+    if (!user || user.role !== 'ADMIN') {
+      logger.debug('Unauthorized access attempt to:', c.req.url)
+
+      return c.json(
+        {
+          code: 'UNAUTHORIZED',
+          message: '使用者沒有管理員權限',
+        },
+        403
+      )
+    }
+
+    return next()
+  })
 }
 
 export default new AuthMiddleware()

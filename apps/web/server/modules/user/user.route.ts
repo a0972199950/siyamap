@@ -38,10 +38,6 @@ import userController from './user.controller'
  *                 minLength: 1
  *                 description: 使用者密碼
  *                 example: "password123"
- *               confirmPassword:
- *                 type: string
- *                 description: 確認密碼，必須與密碼相同
- *                 example: "password123"
  *     responses:
  *       201:
  *         description: 使用者建立成功
@@ -105,7 +101,7 @@ import userController from './user.controller'
  */
 app.post(
   '/users',
-  authMiddleware.requireLoggedIn,
+  authMiddleware.requireAdmin,
   bodyValidator.json(InsertUserDto),
   userController.insert
 )

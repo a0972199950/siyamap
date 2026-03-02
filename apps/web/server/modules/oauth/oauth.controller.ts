@@ -1,10 +1,10 @@
 import { deleteCookie, getCookie, setCookie } from 'hono/cookie'
-import { SignJWT } from 'jose'
 
 import { Handler } from '@/lib/hono'
 import userService from '@/server/modules/user/user.service'
 import { TGetLoginUrlDto } from '@/types/dto'
 import ResponseFormatter from '@/utils/response-formatter'
+import setSessionCookie from '@/utils/set-session-cookie'
 
 import oauthService from './oauth.service'
 
@@ -64,23 +64,7 @@ class OauthController extends ResponseFormatter {
       picture: userInfo.picture,
     })
 
-    const { id } = user
-
-    const secret = new TextEncoder().encode(process.env.SESSION_JWT_SECRET!)
-
-    const sessionJwt = await new SignJWT({ userId: id })
-      .setProtectedHeader({ alg: 'HS256' })
-      .setIssuedAt()
-      .setExpirationTime('7d') // 7 days
-      .sign(secret)
-
-    setCookie(c, 'session', sessionJwt, {
-      maxAge: 60 * 60 * 24 * 7, // 7 days
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-    })
+    await setSessionCookie(c, user.id)
 
     return c.redirect(from || '/')
   }
