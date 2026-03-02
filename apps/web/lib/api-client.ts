@@ -33,6 +33,12 @@ class Api extends RequestClient {
       params: dto,
       cache: 'no-store',
     })
+
+  // profile API
+  getProfile = () =>
+    this.get<{ data: TUserDto }>('/profile', {
+      cache: 'no-store',
+    })
 }
 
 export default new Api()
