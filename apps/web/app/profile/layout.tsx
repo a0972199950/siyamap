@@ -1,6 +1,8 @@
 import { ProfileContextProvider } from '@/contexts/profile-context'
 import api from '@/lib/api-client'
 
+export const dynamic = 'force-dynamic'
+
 export interface Props {
   children: React.ReactNode
 }

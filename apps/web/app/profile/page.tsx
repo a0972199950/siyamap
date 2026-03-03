@@ -1,6 +1,5 @@
 'use client'
 
-import { Button } from '@siyamap/ui'
 import { NextPage } from 'next'
 import Link from 'next/link'
 
