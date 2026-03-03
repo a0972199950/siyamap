@@ -10,7 +10,7 @@ import { TCreateFileDto } from '@/types/dto'
 import { files } from './file.schema'
 
 class FileService {
-  public async createFile(dto: TCreateFileDto) {
+  public async createFile(dto: TCreateFileDto, userId: number) {
     const { fileType } = dto
 
     const extension = mime.extension(fileType)
@@ -30,6 +30,8 @@ class FileService {
         url: `https://${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}/${fileName}`,
 
         fileName,
+
+        userId,
       })
       .returning()
 

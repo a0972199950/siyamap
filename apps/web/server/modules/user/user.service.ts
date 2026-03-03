@@ -8,9 +8,10 @@ import { User, users } from './user.schema'
 
 interface InsertUserProps extends Omit<
   TInsertUserDto,
-  'confirmPassword' | 'password'
+  'confirmPassword' | 'password' | 'role'
 > {
   password?: string
+  rlole?: 'ADMIN' | 'USER'
 }
 
 class UserService {
@@ -60,9 +61,9 @@ class UserService {
   }
 
   async findOrInsert(
-    userInfo: Omit<TInsertUserDto, 'password' | 'confirmPassword'>
+    userInfo: Omit<TInsertUserDto, 'password' | 'confirmPassword' | 'role'>
   ) {
-    const { email, username, picture } = userInfo
+    const { email } = userInfo
 
     let user: any = await this.findOne({ email })
 

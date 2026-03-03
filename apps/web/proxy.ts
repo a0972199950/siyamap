@@ -20,7 +20,7 @@ const withDevOnly: FunctionFactory<NextProxy> = (nextProxy: NextProxy) => {
   return currentProxy
 }
 
-const LOGGEDIN_ONLY_ROUTES = ['/user']
+const LOGGEDIN_ONLY_ROUTES = ['/user', '/profile', '/upload']
 const withLoggedInOnly: FunctionFactory<NextProxy> = (nextProxy: NextProxy) => {
   const currentProxy: NextProxy = async (request: NextRequest, _event) => {
     const { pathname } = request.nextUrl
@@ -42,9 +42,34 @@ const withLoggedInOnly: FunctionFactory<NextProxy> = (nextProxy: NextProxy) => {
   return currentProxy
 }
 
+const LOGGEDOUT_ONLY_ROUTES = ['/login']
+const withLoggedOutOnly: FunctionFactory<NextProxy> = (
+  nextProxy: NextProxy
+) => {
+  const currentProxy: NextProxy = async (request: NextRequest, _event) => {
+    const { pathname } = request.nextUrl
+    const isLoggedIn = !!request.cookies.get('session')
+
+    if (
+      LOGGEDOUT_ONLY_ROUTES.some(route => pathname.startsWith(route)) &&
+      isLoggedIn
+    ) {
+      const profile = new URL('/profile', request.url)
+
+      return NextResponse.redirect(profile) // 如果已經登入，重定向到個人頁面
+    }
+
+    return nextProxy(request, _event)
+  }
+
+  return currentProxy
+}
+
 // 這裡的順序決定了執行的優先級
-export default chain([withDevOnly, withLoggedInOnly], 0, () =>
-  NextResponse.next()
+export default chain(
+  [withDevOnly, withLoggedInOnly, withLoggedOutOnly],
+  0,
+  () => NextResponse.next()
 )
 
 export const config = {

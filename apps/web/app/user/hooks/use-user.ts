@@ -28,6 +28,7 @@ const useUser = (initialUsers: TUserDto[]) => {
       email: string
       password: string
       confirmPassword: string
+      role: 'ADMIN' | 'USER'
     }) => {
       const { data } = await api.insertUser(args)
       return data

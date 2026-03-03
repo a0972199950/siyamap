@@ -4,6 +4,8 @@ import {
   TGetLoginUrlDto,
   TGetLoginUrlResDto,
   TInsertUserDto,
+  TLoginDto,
+  TSignupDto,
   TUserDto,
 } from '@/types/dto'
 import { RequestClient } from '@/utils/request'
@@ -39,6 +41,13 @@ class Api extends RequestClient {
     this.get<{ data: TUserDto }>('/profile', {
       cache: 'no-store',
     })
+
+  // auth API
+  signup = (dto: TSignupDto) => this.post('/auth/signup', { body: dto })
+
+  login = (dto: TLoginDto) => this.post('/auth/login', { body: dto })
+
+  logout = () => this.get('/auth/logout')
 }
 
 export default new Api()

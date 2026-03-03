@@ -1,3 +1,4 @@
+import { relations } from 'drizzle-orm'
 import {
   jsonb,
   pgEnum,
@@ -6,6 +7,8 @@ import {
   text,
   timestamp,
 } from 'drizzle-orm/pg-core'
+
+import { files } from '@/server/modules/file/file.schema'
 
 // 必須 export，pnpm db:push 才能知道有這個 enum
 export const UserRole = pgEnum('user_role', ['ADMIN', 'USER'])
@@ -41,8 +44,8 @@ export const users = pgTable('users', {
   metadata: jsonb('metadata'),
 })
 
-// export const usersRelations = relations(users, ({ many }) => ({
-//   posts: many(users), // 指向其他模組的 model
-// }));
-
 export type User = typeof users.$inferSelect
+
+export const usersRelations = relations(users, ({ many }) => ({
+  files: many(files),
+}))

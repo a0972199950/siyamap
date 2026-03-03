@@ -1,4 +1,5 @@
 import { app } from '@/lib/hono'
+import authMiddleware from '@/server/middlewares/auth.middleware'
 import { bodyValidator } from '@/server/middlewares/validator.middleware'
 import { CreateFileDto } from '@/types/dto'
 
@@ -96,4 +97,9 @@ import fileController from './file.controller'
  *                   description: 錯誤訊息
  *                   example: "Failed to create file or generate upload URL"
  */
-app.post('/files', bodyValidator.json(CreateFileDto), fileController.upload)
+app.post(
+  '/files',
+  authMiddleware.requireLoggedIn,
+  bodyValidator.json(CreateFileDto),
+  fileController.upload
+)

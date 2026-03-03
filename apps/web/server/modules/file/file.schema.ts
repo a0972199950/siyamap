@@ -1,4 +1,7 @@
+import { relations } from 'drizzle-orm'
 import { pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core'
+
+import { users } from '@/server/modules/user/user.schema'
 
 export const files = pgTable('files', {
   id: serial('id').primaryKey(),
@@ -21,6 +24,17 @@ export const files = pgTable('files', {
     .notNull()
     .defaultNow()
     .$onUpdate(() => new Date()),
+
+  userId: serial('user_id')
+    .references(() => users.id)
+    .notNull(),
 })
 
 export type File = typeof files.$inferSelect
+
+export const filesRelations = relations(files, ({ one }) => ({
+  user: one(users, {
+    fields: [files.userId],
+    references: [users.id],
+  }),
+}))
