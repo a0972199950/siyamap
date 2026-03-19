@@ -8,7 +8,7 @@ import {
   timestamp,
 } from 'drizzle-orm/pg-core'
 
-import { files } from '@/server/modules/file/file.schema'
+import { files } from '@/server/schema'
 
 // 必須 export，pnpm db:push 才能知道有這個 enum
 export const UserRole = pgEnum('user_role', ['ADMIN', 'USER'])

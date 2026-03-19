@@ -1,10 +1,9 @@
-import bcrypt from 'bcryptjs'
+import _bcrypt from 'bcryptjs'
 import { and, eq, SQLWrapper } from 'drizzle-orm'
 
-import db from '@/lib/db'
+import _db from '@/lib/db'
+import { User, users } from '@/server/schema'
 import { TInsertUserDto } from '@/types/dto'
-
-import { User, users } from './user.schema'
 
 interface InsertUserProps extends Omit<
   TInsertUserDto,
@@ -14,23 +13,26 @@ interface InsertUserProps extends Omit<
   rlole?: 'ADMIN' | 'USER'
 }
 
-class UserService {
-  private users = users
+export class UserService {
+  constructor(
+    private readonly db = _db,
+    private readonly hashSync = _bcrypt.hashSync
+  ) {}
 
   async insert(dto: InsertUserProps) {
     if (!dto.password) {
-      const [newUser] = await db
-        .insert(this.users)
+      const [newUser] = await this.db
+        .insert(users)
         .values({ ...dto, password: null })
         .returning()
       return newUser
     }
 
     const saltRounds = 10
-    const hashedPassword = bcrypt.hashSync(dto.password, saltRounds)
+    const hashedPassword = this.hashSync(dto.password, saltRounds)
 
-    const [newUser] = await db
-      .insert(this.users)
+    const [newUser] = await this.db
+      .insert(users)
       .values({ ...dto, password: hashedPassword })
       .returning()
 
@@ -38,8 +40,8 @@ class UserService {
   }
 
   async findAll() {
-    const users = await db.select().from(this.users)
-    return users
+    const data = await this.db.select().from(users)
+    return data
   }
 
   async findOne(query: Partial<User>) {
@@ -47,13 +49,13 @@ class UserService {
 
     Object.entries(query).forEach(([key, value]) => {
       if (value) {
-        filters.push(eq(this.users[key as keyof User], value))
+        filters.push(eq(users[key as keyof User], value))
       }
     })
 
-    const [user] = await db
+    const [user] = await this.db
       .select()
-      .from(this.users)
+      .from(users)
       .where(and(...filters))
       .limit(1)
 

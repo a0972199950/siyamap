@@ -1,29 +1,38 @@
-import bcrypt from 'bcryptjs'
+import _bcrypt from 'bcryptjs'
 import { deleteCookie } from 'hono/cookie'
 
 import { Handler } from '@/lib/hono'
-import userService from '@/server/modules/user/user.service'
+import _userService, { UserService } from '@/server/modules/user/user.service'
 import { TLoginDto, TSignupDto } from '@/types/dto'
-import ResponseFormatter from '@/utils/response-formatter'
-import setSessionCookie from '@/utils/set-session-cookie'
+import _responseFormatter, {
+  ResponseFormatter,
+} from '@/utils/response-formatter'
+import _setSessionCookie from '@/utils/set-session-cookie'
 
-class AuthController extends ResponseFormatter {
+class AuthController {
+  constructor(
+    private readonly responseFormatter: ResponseFormatter = _responseFormatter,
+    private readonly userService: UserService = _userService,
+    private readonly setSessionCookie = _setSessionCookie,
+    private readonly compare = _bcrypt.compare
+  ) {}
+
   public signup: Handler = async c => {
     const data = (await c.req.json()) as TSignupDto
 
     let user = null
     try {
-      user = await userService.insert(data)
+      user = await this.userService.insert(data)
     } catch (error) {
-      return this.formatErrorResponse(c, 500, {
+      return this.responseFormatter.error(c, 500, {
         code: 'USER_EXISTS',
         message: '使用者已存在',
       })
     }
 
-    await setSessionCookie(c, user.id)
+    await this.setSessionCookie(c, user.id)
 
-    return this.formatSuccessResponse(c, 201, { data: user })
+    return this.responseFormatter.success(c, 201, { data: user })
   }
 
   public login: Handler = async c => {
@@ -31,39 +40,39 @@ class AuthController extends ResponseFormatter {
 
     const { email, password } = data
 
-    const user = await userService.findOne({ email })
+    const user = await this.userService.findOne({ email })
 
     if (!user) {
-      return this.formatErrorResponse(c, 404, {
+      return this.responseFormatter.error(c, 404, {
         code: 'USER_NOT_FOUND',
         message: '使用者不存在',
       })
     }
 
     if (!user.password) {
-      return this.formatErrorResponse(c, 401, {
+      return this.responseFormatter.error(c, 401, {
         code: 'USER_FROM_OAUTH',
         message: '此帳號來自第三方登入',
       })
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password)
+    const isPasswordValid = await this.compare(password, user.password)
 
     if (!isPasswordValid) {
-      return this.formatErrorResponse(c, 401, {
+      return this.responseFormatter.error(c, 401, {
         code: 'UNAUTHORIZED',
         message: '帳號或密碼錯誤',
       })
     }
 
-    await setSessionCookie(c, user.id)
+    await this.setSessionCookie(c, user.id)
 
-    return this.formatSuccessResponse(c, 200, { data: user })
+    return this.responseFormatter.success(c, 200, { data: user })
   }
 
   public logout: Handler = async c => {
     deleteCookie(c, 'session')
-    return this.formatSuccessResponse(c, 200, { data: true })
+    return this.responseFormatter.success(c, 200, { data: true })
   }
 }
 

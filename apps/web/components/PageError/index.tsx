@@ -13,16 +13,17 @@ const PageError = (props: Props) => {
   const { error, reset } = props
 
   const errorCause = React.useMemo<ApiErrorResponse>(() => {
-    if (
-      error.cause &&
-      typeof error.cause === 'object' &&
-      'code' in error.cause
-    ) {
-      return error.cause as ApiErrorResponse
-    } else {
-      return {
-        code: 'UNKNOWN_ERROR',
+    // Next.js 序列化 error 時不保留 cause，所以從 message 解析
+    try {
+      const parsed = JSON.parse(error.message)
+      if (parsed && typeof parsed === 'object' && 'code' in parsed) {
+        return parsed as ApiErrorResponse
       }
+    } catch {
+      // message 不是 JSON，忽略
+    }
+    return {
+      code: 'UNKNOWN_ERROR',
     }
   }, [error.message])
 

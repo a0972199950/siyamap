@@ -149,16 +149,12 @@ export class RequestClient {
           }
         }
 
-        const error = new Error(
-          `Request failed with status ${response.status}`,
-          {
-            cause: {
-              response,
-              data: finalErrorData,
-            },
-          }
-        )
-        throw error
+        throw new Error(JSON.stringify(finalErrorData), {
+          cause: {
+            response,
+            data: finalErrorData,
+          },
+        })
       }
 
       // 嘗試解析 JSON 回應
@@ -181,17 +177,15 @@ export class RequestClient {
       }
 
       // 對於其他錯誤（如網路錯誤），包裝成統一格式
-      throw new Error(
-        `Network error: ${error instanceof Error ? error.message : 'Unknown error'}`,
-        {
-          cause: {
-            data: {
-              code: 'NETWORK_ERROR',
-              message: error instanceof Error ? error.message : 'Unknown error',
-            },
-          },
-        }
-      )
+      const networkErrorData = {
+        code: 'NETWORK_ERROR',
+        message: error instanceof Error ? error.message : 'Unknown error',
+      }
+      throw new Error(JSON.stringify(networkErrorData), {
+        cause: {
+          data: networkErrorData,
+        },
+      })
     }
   }
 

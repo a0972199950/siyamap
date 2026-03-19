@@ -1,12 +1,15 @@
 import { Context, TypedResponse } from 'hono'
-import { ContentfulStatusCode,StatusCode } from 'hono/utils/http-status'
+import { ContentfulStatusCode, StatusCode } from 'hono/utils/http-status'
 
-import { ApiErrorResponse,ApiSuccessResponse } from '@/types'
+import { ApiErrorResponse, ApiSuccessResponse } from '@/types'
 
-class ResponseFormatter {
-  formatSuccessResponse(
+const DEFAULT_SUCCESS_STATUS = 200
+const DEFAULT_ERROR_STATUS = 500
+
+export class ResponseFormatter {
+  success(
     c: Context,
-    status: StatusCode = 200,
+    status: StatusCode = DEFAULT_SUCCESS_STATUS,
     result: ApiSuccessResponse<any>
   ): TypedResponse<ApiSuccessResponse<any>> | Response {
     if ([101, 204, 205, 304].includes(status)) {
@@ -16,9 +19,9 @@ class ResponseFormatter {
     return c.json(result, status as ContentfulStatusCode)
   }
 
-  formatErrorResponse(
+  error(
     c: Context,
-    status: StatusCode = 500,
+    status: StatusCode = DEFAULT_ERROR_STATUS,
     result: ApiErrorResponse
   ): TypedResponse<ApiErrorResponse> | Response {
     if ([101, 204, 205, 304].includes(status)) {
@@ -29,4 +32,4 @@ class ResponseFormatter {
   }
 }
 
-export default ResponseFormatter
+export default new ResponseFormatter()

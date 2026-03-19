@@ -1,6 +1,5 @@
 import { OAuthState } from '@/types'
-import logger from '@/utils/logger'
-import request from '@/utils/request'
+import _request, { RequestClient } from '@/utils/request'
 
 const AUTH_PROVIDERS = {
   GOOGLE: {
@@ -31,7 +30,8 @@ interface GoogleUserInfo {
   email_verified: boolean
 }
 
-class OauthService {
+export class OauthService {
+  constructor(private readonly request: RequestClient = _request) {}
   public generateCsrfToken() {
     const array = new Uint8Array(64) // 建立一個 64 位元組的陣列
     crypto.getRandomValues(array) // 填入隨機數
@@ -62,7 +62,7 @@ class OauthService {
   }
 
   public async getGoogleAccessTokenAndUserInfo(code: string) {
-    const tokenData = await request.post<GoogleTokenResponse>(
+    const tokenData = await this.request.post<GoogleTokenResponse>(
       AUTH_PROVIDERS.GOOGLE.TOKEN_URL,
       {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -76,7 +76,7 @@ class OauthService {
       }
     )
 
-    const userInfo = await request.get<GoogleUserInfo>(
+    const userInfo = await this.request.get<GoogleUserInfo>(
       AUTH_PROVIDERS.GOOGLE.USERINFO_URL,
       {
         params: {

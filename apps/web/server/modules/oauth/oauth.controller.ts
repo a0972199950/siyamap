@@ -1,16 +1,25 @@
 import { deleteCookie, getCookie, setCookie } from 'hono/cookie'
 
 import { Handler } from '@/lib/hono'
-import userService from '@/server/modules/user/user.service'
+import _userService, { UserService } from '@/server/modules/user/user.service'
 import { TGetLoginUrlDto } from '@/types/dto'
-import ResponseFormatter from '@/utils/response-formatter'
-import setSessionCookie from '@/utils/set-session-cookie'
+import _responseFormatter, {
+  ResponseFormatter,
+} from '@/utils/response-formatter'
+import _setSessionCookie from '@/utils/set-session-cookie'
 
-import oauthService from './oauth.service'
+import _oauthService, { OauthService } from './oauth.service'
 
-class OauthController extends ResponseFormatter {
+class OauthController {
+  constructor(
+    private readonly responseFormatter: ResponseFormatter = _responseFormatter,
+    private readonly userService: UserService = _userService,
+    private readonly oauthService: OauthService = _oauthService,
+    private readonly setSessionCookie = _setSessionCookie
+  ) {}
+
   public generateGoogleLoginUrl: Handler = async c => {
-    const csrfToken = await oauthService.generateCsrfToken()
+    const csrfToken = await this.oauthService.generateCsrfToken()
     setCookie(c, 'csrf_token', csrfToken, {
       maxAge: 60 * 5, // 5 minutes
       httpOnly: true,
@@ -21,12 +30,14 @@ class OauthController extends ResponseFormatter {
 
     const { from } = (await c.req.query()) as TGetLoginUrlDto
 
-    const loginUrl = await oauthService.generateGoogleLoginUrl({
+    const loginUrl = await this.oauthService.generateGoogleLoginUrl({
       csrfToken,
       from,
     })
 
-    return this.formatSuccessResponse(c, 200, { data: { loginUrl } })
+    return this.responseFormatter.success(c, 200, {
+      data: { loginUrl },
+    })
   }
 
   public handleGoogleCallback: Handler = async c => {
@@ -36,7 +47,7 @@ class OauthController extends ResponseFormatter {
     }
 
     if (!code) {
-      return this.formatErrorResponse(c, 403, {
+      return this.responseFormatter.error(c, 403, {
         code: 'MISSING_GOOGLE_AUTH_CODE',
         message: 'Google 認證碼缺失',
       })
@@ -50,21 +61,22 @@ class OauthController extends ResponseFormatter {
     deleteCookie(c, 'csrf_token')
 
     if (csrfToken !== storedCsrfToken) {
-      return this.formatErrorResponse(c, 403, {
+      return this.responseFormatter.error(c, 403, {
         code: 'CSRF_ERROR',
         message: 'CSRF token 驗證失敗',
       })
     }
 
-    const userInfo = await oauthService.getGoogleAccessTokenAndUserInfo(code)
+    const userInfo =
+      await this.oauthService.getGoogleAccessTokenAndUserInfo(code)
 
-    const user = await userService.findOrInsert({
+    const user = await this.userService.findOrInsert({
       email: userInfo.email,
       username: userInfo.name,
       picture: userInfo.picture,
     })
 
-    await setSessionCookie(c, user.id)
+    await this.setSessionCookie(c, user.id)
 
     return c.redirect(from || '/')
   }

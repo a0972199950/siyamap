@@ -27,6 +27,8 @@ class AuthMiddleware {
       )
       const { userId } = payload
 
+      logger.debug('userId:', userId)
+
       const user = await userService.findOne({ id: userId })
       c.set('user', user)
 

@@ -1,15 +1,20 @@
 import { PutObjectCommand } from '@aws-sdk/client-s3'
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
+import { getSignedUrl as _getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import mime from 'mime-types' // 需要安裝 npm install mime-types
 import { v7 as uuid } from 'uuid'
 
-import s3Client from '@/lib/aws-s3-client'
-import db from '@/lib/db'
+import _s3Client from '@/lib/aws-s3-client'
+import _db from '@/lib/db'
+import { files } from '@/server/schema'
 import { TCreateFileDto } from '@/types/dto'
 
-import { files } from './file.schema'
+export class FileService {
+  constructor(
+    private readonly db = _db,
+    private readonly s3Client = _s3Client,
+    private readonly getSignedUrl = _getSignedUrl
+  ) {}
 
-class FileService {
   public async createFile(dto: TCreateFileDto, userId: number) {
     const { fileType } = dto
 
@@ -22,9 +27,11 @@ class FileService {
       ContentType: fileType,
     })
 
-    const uploadUrl = await getSignedUrl(s3Client, command, { expiresIn: 3600 })
+    const uploadUrl = await this.getSignedUrl(this.s3Client, command, {
+      expiresIn: 3600,
+    })
 
-    const [file] = await db
+    const [file] = await this.db
       .insert(files)
       .values({
         url: `https://${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}/${fileName}`,
