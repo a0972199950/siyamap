@@ -1,0 +1,78 @@
+// --- 枚舉定義 ---
+enum user_role {
+  ADMIN
+  USER
+}
+
+// --- 用戶與權限 ---
+
+Table users {
+  id uuid [pk]
+  email text [unique, not null]
+  username text
+  password text
+  picture text
+  role user_role [not null, default: 'USER']
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+  metadata jsonb
+}
+
+// --- 場館與物理座位 ---
+
+Table venues {
+  id uuid [pk]
+  name text [not null]
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+}
+
+Table seats {
+  id serial [pk]
+  venue_id uuid [ref: > venues.id, not null]
+  seat_label text [not null]
+}
+
+// --- 檔案中心 ---
+
+Table files {
+  id uuid [pk]
+  user_id uuid [ref: > users.id, not null]
+  url text [not null]
+  file_name text [not null]
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+}
+
+// --- 視野圖與用戶心得 ---
+
+Table view_images {
+  id uuid [pk]
+  seat_id serial [ref: > seats.id, not null]
+  file_id uuid [ref: > files.id, not null]
+  user_id uuid [ref: > users.id, not null]
+  is_verified boolean [not null, default: false]
+  comment text
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+}
+
+// --- 演唱會配置與地圖 ---
+
+Table seat_maps {
+  id uuid [pk]
+  venue_id uuid [ref: > venues.id, not null]
+  file_id uuid [ref: > files.id, not null]
+  name text
+  concert_name text [not null]
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+}
+
+// --- 關聯表 ---
+
+Table seat_maps_to_seats {
+  id serial [pk]
+  seat_map_id uuid [ref: > seat_maps.id, not null]
+  seat_id serial [ref: > seats.id, not null]
+}

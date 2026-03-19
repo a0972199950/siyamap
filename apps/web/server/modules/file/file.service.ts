@@ -15,7 +15,7 @@ export class FileService {
     private readonly getSignedUrl = _getSignedUrl
   ) {}
 
-  public async createFile(dto: TCreateFileDto, userId: number) {
+  public async createFile(dto: TCreateFileDto, userId: string) {
     const { fileType } = dto
 
     const extension = mime.extension(fileType)

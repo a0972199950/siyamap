@@ -3,18 +3,21 @@ import {
   jsonb,
   pgEnum,
   pgTable,
-  serial,
   text,
   timestamp,
+  uuid,
 } from 'drizzle-orm/pg-core'
+import { v7 as uuidv7 } from 'uuid'
 
-import { files } from '@/server/schema'
+import { viewImages } from './view_image.schema'
 
 // 必須 export，pnpm db:push 才能知道有這個 enum
 export const UserRole = pgEnum('user_role', ['ADMIN', 'USER'])
 
 export const users = pgTable('users', {
-  id: serial('id').primaryKey(),
+  id: uuid('id')
+    .primaryKey()
+    .$defaultFn(() => uuidv7()),
 
   email: text('email').notNull().unique(),
 
@@ -47,5 +50,5 @@ export const users = pgTable('users', {
 export type User = typeof users.$inferSelect
 
 export const usersRelations = relations(users, ({ many }) => ({
-  files: many(files),
+  viewImages: many(viewImages),
 }))

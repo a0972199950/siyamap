@@ -21,7 +21,7 @@ class AuthMiddleware {
       }
 
       const secretKey = new TextEncoder().encode(secret)
-      const { payload } = await jwtVerify<{ userId: number }>(
+      const { payload } = await jwtVerify<{ userId: string }>(
         session,
         secretKey
       )

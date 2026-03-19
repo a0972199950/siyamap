@@ -2,7 +2,7 @@ import { Context } from 'hono'
 import { setCookie } from 'hono/cookie'
 import { SignJWT } from 'jose'
 
-const setSessionCookie = async (c: Context, userId: number) => {
+const setSessionCookie = async (c: Context, userId: string) => {
   const secret = new TextEncoder().encode(process.env.SESSION_JWT_SECRET!)
 
   const sessionJwt = await new SignJWT({ userId })

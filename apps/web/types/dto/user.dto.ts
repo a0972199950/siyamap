@@ -5,7 +5,7 @@ export const UserRole = z.enum(['ADMIN', 'USER'])
 export type TUserRole = z.infer<typeof UserRole>
 
 export const UserDto = z.object({
-  id: z.number(),
+  id: z.uuidv7(),
   email: z.email('信箱格式不正確'),
   username: z.string().nullable().optional(),
   picture: z.string().nullable().optional(),

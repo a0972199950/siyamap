@@ -2,20 +2,15 @@ import { relations } from 'drizzle-orm'
 import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
 import { v7 as uuidv7 } from 'uuid'
 
-import { users } from '@/server/schema'
+import { seats } from './seat.schema'
+import { seatMaps } from './seat_map.schema'
 
-export const files = pgTable('files', {
+export const venues = pgTable('venues', {
   id: uuid('id')
     .primaryKey()
     .$defaultFn(() => uuidv7()),
 
-  userId: uuid('user_id')
-    .references(() => users.id)
-    .notNull(),
-
-  url: text('url').notNull(),
-
-  fileName: text('file_name').notNull(),
+  name: text('name').notNull(),
 
   createdAt: timestamp('created_at', {
     mode: 'date',
@@ -33,11 +28,10 @@ export const files = pgTable('files', {
     .$onUpdate(() => new Date()),
 })
 
-export type File = typeof files.$inferSelect
+export type Venue = typeof venues.$inferSelect
 
-export const filesRelations = relations(files, ({ one }) => ({
-  user: one(users, {
-    fields: [files.userId],
-    references: [users.id],
-  }),
+export const venuesRelations = relations(venues, ({ many }) => ({
+  seatMaps: many(seatMaps),
+
+  seats: many(seats),
 }))

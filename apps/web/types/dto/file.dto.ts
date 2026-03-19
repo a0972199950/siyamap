@@ -1,7 +1,8 @@
 import { z } from 'zod'
 
 export const FileDto = z.object({
-  id: z.number(),
+  id: z.uuidv7(),
+  userId: z.uuidv7(),
   url: z.url(),
   fileName: z.string(),
   createdAt: z.coerce.date(),
