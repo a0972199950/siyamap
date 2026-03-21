@@ -86,6 +86,18 @@ export default function Home() {
             </Link>
 
             <Link
+              href="/seat-map"
+              className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-teal-400 to-green-500 p-6 text-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
+            >
+              <div className="relative z-10 text-center">
+                <div className="mb-2 text-3xl">💺</div>
+                <div className="font-semibold">座位圖</div>
+                <div className="text-xs opacity-80">編輯座位</div>
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-br from-teal-500 to-green-600 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+            </Link>
+
+            <Link
               href="/login"
               className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-400 to-cyan-500 p-6 text-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
             >
