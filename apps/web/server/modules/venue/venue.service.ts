@@ -7,11 +7,8 @@ import { TInsertVenueDto, TUpdateVenueDto } from '@/types/dto'
 export class VenueService {
   constructor(private readonly db = _db) {}
 
-  async insert(userId: string, data: TInsertVenueDto) {
-    const [newVenue] = await this.db
-      .insert(venues)
-      .values({ ...data, userId })
-      .returning()
+  async insert(data: TInsertVenueDto) {
+    const [newVenue] = await this.db.insert(venues).values(data).returning()
 
     return newVenue
   }

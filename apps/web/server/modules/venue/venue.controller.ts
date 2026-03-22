@@ -19,9 +19,8 @@ class VenueController {
 
   public insert: Handler = async c => {
     const data = (await c.req.json()) as TInsertVenueDto
-    const user = c.get('user')
 
-    const newVenue = await this.venueService.insert(user!.id, data)
+    const newVenue = await this.venueService.insert(data)
 
     if (!newVenue) {
       return this.responseFormatter.error(c, 400, {

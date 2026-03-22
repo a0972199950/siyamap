@@ -8,11 +8,11 @@ export const seatMapsToSeats = pgTable('seat_maps_to_seats', {
   id: serial('id').primaryKey(),
 
   seatMapId: uuid('seat_map_id')
-    .references(() => seatMaps.id)
+    .references(() => seatMaps.id, { onDelete: 'cascade' })
     .notNull(),
 
   seatId: serial('seat_id')
-    .references(() => seats.id)
+    .references(() => seats.id, { onDelete: 'cascade' })
     .notNull(),
 })
 

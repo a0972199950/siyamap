@@ -2,7 +2,6 @@ import { relations } from 'drizzle-orm'
 import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
 import { v7 as uuidv7 } from 'uuid'
 
-import { files } from './file.schema'
 import { venues } from './venue.schema'
 
 export const seatMaps = pgTable('seat_maps', {
@@ -11,12 +10,10 @@ export const seatMaps = pgTable('seat_maps', {
     .$defaultFn(() => uuidv7()),
 
   venueId: uuid('venue_id')
-    .references(() => venues.id)
+    .references(() => venues.id, { onDelete: 'cascade' })
     .notNull(),
 
-  fileId: uuid('file_id')
-    .references(() => files.id)
-    .notNull(),
+  mapSvg: text('map_svg').notNull(),
 
   name: text('name'),
 
@@ -44,10 +41,5 @@ export const seatMapsRelations = relations(seatMaps, ({ one }) => ({
   venue: one(venues, {
     fields: [seatMaps.venueId],
     references: [venues.id],
-  }),
-
-  file: one(files, {
-    fields: [seatMaps.fileId],
-    references: [files.id],
   }),
 }))

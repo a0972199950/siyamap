@@ -20,7 +20,7 @@ export const viewImages = pgTable('view_images', {
     .$defaultFn(() => uuidv7()),
 
   seatId: serial('seat_id')
-    .references(() => seats.id)
+    .references(() => seats.id, { onDelete: 'cascade' })
     .notNull(),
 
   fileId: uuid('file_id')

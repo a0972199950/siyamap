@@ -8,7 +8,7 @@ export const seats = pgTable('seats', {
   id: serial('id').primaryKey(),
 
   venueId: uuid('venue_id')
-    .references(() => venues.id)
+    .references(() => venues.id, { onDelete: 'cascade' })
     .notNull(),
 
   seatLabel: text('seat_label').notNull(),

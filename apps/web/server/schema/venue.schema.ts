@@ -11,10 +11,6 @@ export const venues = pgTable('venues', {
     .primaryKey()
     .$defaultFn(() => uuidv7()),
 
-  userId: uuid('user_id')
-    .references(() => users.id)
-    .notNull(),
-
   name: text('name').notNull().unique(),
 
   createdAt: timestamp('created_at', {
@@ -39,6 +35,4 @@ export const venuesRelations = relations(venues, ({ many, one }) => ({
   seatMaps: many(seatMaps),
 
   seats: many(seats),
-
-  user: one(users)
 }))
