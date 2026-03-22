@@ -11,7 +11,7 @@ const PageSeatMap: NextPage = () => {
   const handleHover = (e: any) => {
     const tagName = e.target.tagName.toLowerCase()
 
-    if (['rect', 'polygon'].includes(tagName)) {
+    if (['rect', 'polygon', 'path'].includes(tagName)) {
       e.target.style.strokeWidth = '2px'
       e.target.style.stroke = 'red'
       e.target.style.cursor = 'pointer'
@@ -21,8 +21,8 @@ const PageSeatMap: NextPage = () => {
   const handleUnHover = (e: any) => {
     const tagName = e.target.tagName.toLowerCase()
 
-    if (['rect', 'polygon'].includes(tagName)) {
-      e.target.style = ''
+    if (['rect', 'polygon', 'path'].includes(tagName)) {
+      delete e.target.style
     }
   }
 
@@ -31,7 +31,7 @@ const PageSeatMap: NextPage = () => {
   const handleClick = (e: any) => {
     const tagName = e.target.tagName.toLowerCase()
 
-    if (['rect', 'polygon'].includes(tagName)) {
+    if (['rect', 'polygon', 'path'].includes(tagName)) {
       const id = e.target.dataset.id || uuid()
       e.target.dataset.id = id
       console.log(id)

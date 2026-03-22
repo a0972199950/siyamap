@@ -48,7 +48,7 @@ export default function Home() {
           >
             🌟 探索更多功能 🌟
           </h3>
-          <div className="mx-auto grid max-w-4xl grid-cols-2 gap-4 md:grid-cols-5">
+          <div className="mx-auto grid max-w-4xl grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
             <Link
               href="/profile"
               className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-400 to-indigo-500 p-6 text-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
@@ -83,6 +83,18 @@ export default function Home() {
                 <div className="text-xs opacity-80">管理帳戶</div>
               </div>
               <div className="absolute inset-0 bg-gradient-to-br from-green-500 to-emerald-600 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+            </Link>
+
+            <Link
+              href="/venue"
+              className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-orange-400 to-amber-500 p-6 text-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
+            >
+              <div className="relative z-10 text-center">
+                <div className="mb-2 text-3xl">🏟️</div>
+                <div className="font-semibold">場館管理</div>
+                <div className="text-xs opacity-80">管理場館</div>
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-br from-orange-500 to-amber-600 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
             </Link>
 
             <Link

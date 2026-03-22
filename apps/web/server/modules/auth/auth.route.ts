@@ -1,5 +1,5 @@
 import { app } from '@/lib/hono'
-import { bodyValidator } from '@/server/middlewares/validator.middleware'
+import { reqValidator } from '@/server/middlewares/validator.middleware'
 import { LoginDto, SignupDto } from '@/types/dto'
 
 import authController from './auth.controller'
@@ -113,7 +113,7 @@ import authController from './auth.controller'
  *                   type: string
  *                   example: "使用者已存在"
  */
-app.post('/auth/signup', bodyValidator.json(SignupDto), authController.signup)
+app.post('/auth/signup', reqValidator.json(SignupDto), authController.signup)
 
 /**
  * @swagger
@@ -229,7 +229,7 @@ app.post('/auth/signup', bodyValidator.json(SignupDto), authController.signup)
  *                   type: string
  *                   example: "使用者不存在"
  */
-app.post('/auth/login', bodyValidator.json(LoginDto), authController.login)
+app.post('/auth/login', reqValidator.json(LoginDto), authController.login)
 
 /**
  * @swagger

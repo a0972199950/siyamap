@@ -1,6 +1,6 @@
 import { app } from '@/lib/hono'
 import authMiddleware from '@/server/middlewares/auth.middleware'
-import { bodyValidator } from '@/server/middlewares/validator.middleware'
+import { reqValidator } from '@/server/middlewares/validator.middleware'
 import { CreateFileDto } from '@/types/dto'
 
 import fileController from './file.controller'
@@ -100,6 +100,6 @@ import fileController from './file.controller'
 app.post(
   '/files',
   authMiddleware.requireLoggedIn,
-  bodyValidator.json(CreateFileDto),
+  reqValidator.json(CreateFileDto),
   fileController.upload
 )

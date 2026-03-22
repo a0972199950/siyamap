@@ -7,7 +7,7 @@ import _responseFormatter, {
 
 import _userService, { UserService } from './user.service'
 
-class UserController {
+export class UserController {
   constructor(
     private readonly responseFormatter: ResponseFormatter = _responseFormatter,
     private readonly userService: UserService = _userService
@@ -20,17 +20,18 @@ class UserController {
 
     try {
       newUser = await this.userService.insert(data)
+
+      return this.responseFormatter.success(c, 201, {
+        data: UserDto.parse(newUser),
+      })
     } catch (err) {
       return this.responseFormatter.error(c, 400, {
         code: 'USER_EXISTS',
         message: '使用者已存在',
-        details: err instanceof Error ? err.message : 'Unknown error',
       })
     }
 
-    return this.responseFormatter.success(c, 201, {
-      data: UserDto.parse(newUser),
-    })
+
   }
 
   public findAll: Handler = async c => {

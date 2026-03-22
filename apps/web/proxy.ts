@@ -1,5 +1,6 @@
 import { NextProxy, NextRequest, NextResponse } from 'next/server'
 
+import api from '@/lib/api-client'
 import { chain, FunctionFactory } from '@/utils/chain'
 
 const DEV_ONLY_ROUTES = ['/api-doc']
@@ -64,6 +65,27 @@ const withLoggedOutOnly: FunctionFactory<NextProxy> = (
 
   return currentProxy
 }
+
+// const ADMIN_ONLY_ROUTES = ['/admin']
+// const withAdminOnly: FunctionFactory<NextProxy> = (nextProxy: NextProxy) => {
+//   const currentProxy: NextProxy = async (request: NextRequest, _event) => {
+//     const { pathname } = request.nextUrl
+//     const { data: user } = await api.getProfile()
+
+//     console.log('user: ', user)
+
+//     if (
+//       ADMIN_ONLY_ROUTES.some(route => pathname.startsWith(route)) &&
+//       user.role !== 'ADMIN'
+//     ) {
+//       return NextResponse.redirect('/') // 如果不是 admin，重定向到首页
+//     }
+
+//     return nextProxy(request, _event)
+//   }
+
+//   return currentProxy
+// }
 
 // 這裡的順序決定了執行的優先級
 export default chain(

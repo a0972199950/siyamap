@@ -1,6 +1,6 @@
 import { app } from '@/lib/hono'
 import authMiddleware from '@/server/middlewares/auth.middleware'
-import { bodyValidator } from '@/server/middlewares/validator.middleware'
+import { reqValidator } from '@/server/middlewares/validator.middleware'
 import { InsertUserDto } from '@/types/dto'
 
 import userController from './user.controller'
@@ -102,7 +102,7 @@ import userController from './user.controller'
 app.post(
   '/users',
   authMiddleware.requireAdmin,
-  bodyValidator.json(InsertUserDto),
+  reqValidator.json(InsertUserDto),
   userController.insert
 )
 

@@ -11,5 +11,7 @@ type ErrorCode =
   | 'USER_NOT_FOUND' // 使用者不存在
   | 'USER_EXISTS' // 使用者已存在
   | 'USER_FROM_OAUTH' // 此帳號來自 OAuth，沒有密碼
+  | 'VENUE_EXISTS' // 場館已存在
+  | 'DATA_NOT_FOUND' // 資料不存在
 
 export default ErrorCode

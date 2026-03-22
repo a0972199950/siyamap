@@ -4,13 +4,18 @@ import { v7 as uuidv7 } from 'uuid'
 
 import { seats } from './seat.schema'
 import { seatMaps } from './seat_map.schema'
+import { users } from './user.schema'
 
 export const venues = pgTable('venues', {
   id: uuid('id')
     .primaryKey()
     .$defaultFn(() => uuidv7()),
 
-  name: text('name').notNull(),
+  userId: uuid('user_id')
+    .references(() => users.id)
+    .notNull(),
+
+  name: text('name').notNull().unique(),
 
   createdAt: timestamp('created_at', {
     mode: 'date',
@@ -30,8 +35,10 @@ export const venues = pgTable('venues', {
 
 export type Venue = typeof venues.$inferSelect
 
-export const venuesRelations = relations(venues, ({ many }) => ({
+export const venuesRelations = relations(venues, ({ many, one }) => ({
   seatMaps: many(seatMaps),
 
   seats: many(seats),
+
+  user: one(users)
 }))
