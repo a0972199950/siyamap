@@ -12,8 +12,9 @@ const PageSeatMap: NextPage = () => {
     const tagName = e.target.tagName.toLowerCase()
 
     if (['rect', 'polygon', 'path'].includes(tagName)) {
-      e.target.style.strokeWidth = '2px'
+      e.target.style.strokeWidth = '4px'
       e.target.style.stroke = 'red'
+      // e.target.style.filter = 'drop-shadow(3px 5px 2px rgb(0 0 0)'
       e.target.style.cursor = 'pointer'
     }
   }
@@ -22,7 +23,7 @@ const PageSeatMap: NextPage = () => {
     const tagName = e.target.tagName.toLowerCase()
 
     if (['rect', 'polygon', 'path'].includes(tagName)) {
-      delete e.target.style
+      e.target.removeAttribute('style')
     }
   }
 
