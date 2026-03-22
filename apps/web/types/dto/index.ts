@@ -1,5 +1,6 @@
 export * from './auth.dto'
 export * from './file.dto'
 export * from './oauth.dto'
+export * from './seat-map.dto'
 export * from './user.dto'
 export * from './venue.dto'

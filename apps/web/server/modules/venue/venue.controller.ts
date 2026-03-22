@@ -37,7 +37,7 @@ class VenueController {
   public findOne: Handler = async c => {
     const { id } = c.req.param() as TFindVenueDto
 
-    const venue = await this.venueService.find(id)
+    const venue = await this.venueService.fineOne(id)
 
     if (!venue) {
       return this.responseFormatter.error(c, 404, {

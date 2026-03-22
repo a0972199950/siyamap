@@ -13,7 +13,7 @@ export class VenueService {
     return newVenue
   }
 
-  async find(id: string) {
+  async fineOne(id: string) {
     const [venue] = await this.db
       .select()
       .from(venues)

@@ -5,6 +5,7 @@ import '@/server/modules/oauth/oauth.route'
 import '@/server/modules/auth/auth.route'
 import '@/server/modules/profile/profile.route'
 import '@/server/modules/venue/venue.route'
+import '@/server/modules/seat-map/seat-map.route'
 
 import { app, handle } from '@/lib/hono'
 
