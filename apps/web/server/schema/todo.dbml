@@ -1,0 +1,161 @@
+enum user_role {
+	ADMIN
+	USER
+}
+
+
+
+enum taiwan_area {
+	NOETHERN
+	CENTRAL
+	SOUTHERN
+	EASTERN
+	ISLANDS
+}
+
+
+
+enum seat_type {
+	STANDING
+	SEATED
+	ACCESSIBLE
+}
+
+
+
+enum distance {
+	FAR
+	MIDDLE
+	NEAR
+}
+
+
+
+enum aircon_strength {
+	HOT
+	COMFORT
+	COLD
+}
+
+
+
+enum venue_stutas {
+	DRAFT
+	PUBLISHED
+}
+
+Table users [headercolor: #175e7a] {
+	id uuid [ pk, unique ]
+	email text [ not null ]
+	username text
+	password text
+	picture text
+	role user_role [ not null, default: USER ]
+	created_at timestamptz [ not null, default: `now()` ]
+	updated_at timestamptz [ not null, default: `now()` ]
+	metadata jsonb
+}
+
+Table venues [headercolor: #175e7a] {
+	id uuid [ pk, unique ]
+	name text [ not null ]
+	status venue_stutas
+	created_at timestamptz [ not null, default: `now()` ]
+	updated_at timestamptz [ not null, default: `now()` ]
+	area taiwan_area
+	address text
+	restricted_view text
+	seat_count integer
+	locker_count integer
+	traffic_guide text
+}
+
+Table contributions [headercolor: #175e7a] {
+	id uuid [ pk, unique ]
+	venue_id uuid [ not null ]
+	user_id uuid
+	concert_name text
+	satisfaction decimal
+	seat_type seat_type
+	seat_area uuid
+	seat_row text
+	seat_label text
+	image_file_ids uuid
+	is_retricted_area boolean
+	can_pick_ribbon boolean
+	is_aisle_seat boolean
+	exit_distance distance
+	dismissal_time integer
+	aircon_strength aircon_strength
+	aircon_comment text
+	comment text
+
+	Note: 'seat_area 對應 seat_maps 裡的 area 選項'
+}
+
+Table files [headercolor: #175e7a] {
+	id uuid [ pk, unique ]
+	user_id uuid [ not null ]
+	url text [ not null ]
+	file_name text [ not null ]
+	created_at timestamptz [ not null, default: `now()` ]
+	updated_at timestamptz [ not null, default: `now()` ]
+}
+
+Table seat_maps [headercolor: #175e7a] {
+	id uuid [ pk, unique ]
+	venue_id uuid [ not null ]
+	map_svg text [ not null ]
+	created_at timestamptz [ not null, default: `now()` ]
+	updated_at timestamptz [ not null, default: `now()` ]
+
+	Note: '待新增座位區域(會是一個陣列，由前端新增)'
+}
+
+Table restrooms [headercolor: #175e7a] {
+	id uuid [ pk, not null ]
+	male_count integer
+	female_count integer
+	disability_count integer
+	comment text
+	venus_id uuid
+}
+
+Table image_files [headercolor: #175e7a] {
+	id uuid [ pk, not null ]
+	device_name text
+	file_id_with_watermark uuid
+	file_id_without_watermark uuid
+}
+
+Ref fk_venues_id_seats {
+	venues.id < contributions.venue_id [ delete: no action, update: no action ]
+}
+
+Ref fk_users_id_files {
+	users.id < files.user_id [ delete: no action, update: no action ]
+}
+
+Ref fk_venues_id_seat_maps {
+	venues.id - seat_maps.venue_id [ delete: no action, update: no action ]
+}
+
+Ref fk_venues_id_restrooms {
+	venues.id - restrooms.venus_id [ delete: no action, update: no action ]
+}
+
+Ref fk_users_id_contributions {
+	users.id - contributions.user_id [ delete: no action, update: no action ]
+}
+
+Ref fk_image_files_file_id_files {
+	image_files.file_id_with_watermark - files.id [ delete: no action, update: no action ]
+}
+
+Ref fk_contributions_image_file_ids_image_files {
+	contributions.image_file_ids < image_files.id [ delete: no action, update: no action ]
+}
+
+Ref fk_image_files_file_id_without_watermark_files {
+	image_files.file_id_without_watermark - files.id [ delete: no action, update: no action ]
+}
