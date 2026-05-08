@@ -31,7 +31,7 @@ export const venues = pgTable('venues', {
 
   name: text('name').notNull(),
 
-  status: VenueStatus('status'),
+  status: VenueStatus('status').default('DRAFT'),
 
   createdAt: timestamp('created_at', {
     mode: 'date',
