@@ -21,46 +21,8 @@ import profileController from './profile.controller'
  *             schema:
  *               type: object
  *               properties:
- *                 status:
- *                   type: string
- *                   example: "ok"
  *                 data:
- *                   type: object
- *                   properties:
- *                     id:
- *                       type: number
- *                       description: 用戶 ID
- *                       example: 1
- *                     email:
- *                       type: string
- *                       format: email
- *                       description: 用戶信箱
- *                       example: "user@example.com"
- *                     username:
- *                       type: string
- *                       nullable: true
- *                       description: 用戶名稱
- *                       example: "johndoe"
- *                     picture:
- *                       type: string
- *                       nullable: true
- *                       description: 用戶頭像網址
- *                       example: "https://example.com/avatar.jpg"
- *                     createdAt:
- *                       type: string
- *                       format: date-time
- *                       description: 帳號建立時間
- *                       example: "2024-01-01T00:00:00.000Z"
- *                     updatedAt:
- *                       type: string
- *                       format: date-time
- *                       description: 資料更新時間
- *                       example: "2024-01-01T00:00:00.000Z"
- *                     metadata:
- *                       type: object
- *                       nullable: true
- *                       description: 額外用戶資料
- *                       example: null
+ *                   $ref: '#/components/schemas/User'
  *       401:
  *         description: 未授權 - 需要登入
  *         content:

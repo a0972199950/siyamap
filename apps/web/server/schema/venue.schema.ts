@@ -1,17 +1,37 @@
 import { relations } from 'drizzle-orm'
-import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
+import {
+  integer,
+  pgEnum,
+  pgTable,
+  text,
+  timestamp,
+  uuid,
+} from 'drizzle-orm/pg-core'
 import { v7 as uuidv7 } from 'uuid'
 
+import { contributions } from './contribution.schema'
+import { restrooms } from './restroom.schema'
 import { seats } from './seat.schema'
 import { seatMaps } from './seat_map.schema'
-import { users } from './user.schema'
+
+export const TaiwanArea = pgEnum('taiwan_area', [
+  'NORTHERN',
+  'CENTRAL',
+  'SOUTHERN',
+  'EASTERN',
+  'ISLANDS',
+])
+
+export const VenueStatus = pgEnum('venue_status', ['DRAFT', 'PUBLISHED'])
 
 export const venues = pgTable('venues', {
   id: uuid('id')
     .primaryKey()
     .$defaultFn(() => uuidv7()),
 
-  name: text('name').notNull().unique(),
+  name: text('name').notNull(),
+
+  status: VenueStatus('status'),
 
   createdAt: timestamp('created_at', {
     mode: 'date',
@@ -27,12 +47,25 @@ export const venues = pgTable('venues', {
     .notNull()
     .defaultNow()
     .$onUpdate(() => new Date()),
+
+  area: TaiwanArea('area'),
+
+  address: text('address'),
+
+  restrictedView: text('restricted_view'),
+
+  seatCount: integer('seat_count'),
+
+  lockerCount: integer('locker_count'),
+
+  trafficGuide: text('traffic_guide'),
 })
 
 export type Venue = typeof venues.$inferSelect
 
 export const venuesRelations = relations(venues, ({ many, one }) => ({
-  seatMaps: many(seatMaps),
-
+  seatMap: one(seatMaps),
+  restroom: one(restrooms),
   seats: many(seats),
+  contributions: many(contributions),
 }))

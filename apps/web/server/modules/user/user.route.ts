@@ -7,6 +7,55 @@ import userController from './user.controller'
 
 /**
  * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *           format: uuid
+ *           description: 使用者 ID
+ *           example: "01961a3e-0e5b-7000-8000-000000000000"
+ *         email:
+ *           type: string
+ *           format: email
+ *           description: 使用者信箱
+ *           example: "user@example.com"
+ *         username:
+ *           type: string
+ *           nullable: true
+ *           description: 使用者名稱
+ *           example: "johndoe"
+ *         picture:
+ *           type: string
+ *           nullable: true
+ *           description: 使用者頭像網址
+ *           example: null
+ *         role:
+ *           type: string
+ *           enum: [ADMIN, USER]
+ *           description: 使用者角色
+ *           example: "USER"
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           description: 建立時間
+ *           example: "2024-01-01T00:00:00.000Z"
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ *           description: 更新時間
+ *           example: "2024-01-01T00:00:00.000Z"
+ *         metadata:
+ *           type: object
+ *           nullable: true
+ *           description: 額外資料
+ *           example: null
+ */
+
+/**
+ * @swagger
  * /api/users:
  *   post:
  *     tags:
@@ -22,7 +71,6 @@ import userController from './user.controller'
  *             required:
  *               - email
  *               - password
- *               - confirmPassword
  *             properties:
  *               email:
  *                 type: string
@@ -38,6 +86,19 @@ import userController from './user.controller'
  *                 minLength: 1
  *                 description: 使用者密碼
  *                 example: "password123"
+ *               picture:
+ *                 type: string
+ *                 nullable: true
+ *                 description: 使用者頭像網址
+ *               role:
+ *                 type: string
+ *                 enum: [ADMIN, USER]
+ *                 description: 使用者角色 (可選，預設 USER)
+ *                 example: "USER"
+ *               metadata:
+ *                 type: object
+ *                 nullable: true
+ *                 description: 額外資料
  *     responses:
  *       201:
  *         description: 使用者建立成功
@@ -47,31 +108,7 @@ import userController from './user.controller'
  *               type: object
  *               properties:
  *                 data:
- *                   type: object
- *                   properties:
- *                     id:
- *                       type: number
- *                       description: 使用者 ID
- *                     email:
- *                       type: string
- *                       format: email
- *                       description: 使用者信箱
- *                     username:
- *                       type: string
- *                       nullable: true
- *                       description: 使用者名稱
- *                     createdAt:
- *                       type: string
- *                       format: date-time
- *                       description: 建立時間
- *                     updatedAt:
- *                       type: string
- *                       format: date-time
- *                       description: 更新時間
- *                     metadata:
- *                       type: object
- *                       nullable: true
- *                       description: 額外資料
+ *                   $ref: '#/components/schemas/User'
  *       400:
  *         description: 輸入資料驗證錯誤
  *         content:
@@ -125,31 +162,7 @@ app.post(
  *                 data:
  *                   type: array
  *                   items:
- *                     type: object
- *                     properties:
- *                       id:
- *                         type: number
- *                         description: 使用者 ID
- *                       email:
- *                         type: string
- *                         format: email
- *                         description: 使用者信箱
- *                       username:
- *                         type: string
- *                         nullable: true
- *                         description: 使用者名稱
- *                       createdAt:
- *                         type: string
- *                         format: date-time
- *                         description: 建立時間
- *                       updatedAt:
- *                         type: string
- *                         format: date-time
- *                         description: 更新時間
- *                       metadata:
- *                         type: object
- *                         nullable: true
- *                         description: 額外資料
+ *                     $ref: '#/components/schemas/User'
  *       500:
  *         description: 伺服器內部錯誤
  *         content:

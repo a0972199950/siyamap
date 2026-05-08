@@ -1,10 +1,74 @@
 import { app } from '@/lib/hono'
 import authMiddleware from '@/server/middlewares/auth.middleware'
 import { reqValidator } from '@/server/middlewares/validator.middleware'
-import { FindVenueDto,InsertVenueDto, UpdateVenueDto } from '@/types/dto'
+import { FindVenueDto, InsertVenueDto, UpdateVenueDto } from '@/types/dto'
 
 import venueController from './venue.controller'
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Venue:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *           format: uuid
+ *           description: 場館 ID
+ *           example: "01961a3e-0e5b-7000-8000-000000000000"
+ *         name:
+ *           type: string
+ *           description: 場館名稱
+ *           example: "台北小巨蛋"
+ *         status:
+ *           type: string
+ *           nullable: true
+ *           enum: [DRAFT, PUBLISHED]
+ *           description: 場館狀態
+ *           example: "PUBLISHED"
+ *         area:
+ *           type: string
+ *           nullable: true
+ *           enum: [NORTHERN, CENTRAL, SOUTHERN, EASTERN, ISLANDS]
+ *           description: 所在地區
+ *           example: "NORTHERN"
+ *         address:
+ *           type: string
+ *           nullable: true
+ *           description: 場館地址
+ *           example: "台北市松山區南京東路四段2號"
+ *         restrictedView:
+ *           type: string
+ *           nullable: true
+ *           description: 視線受限座位描述
+ *           example: "1F-A 區後排視線部分受柱子遮擋"
+ *         seatCount:
+ *           type: integer
+ *           nullable: true
+ *           description: 座位數
+ *           example: 15000
+ *         lockerCount:
+ *           type: integer
+ *           nullable: true
+ *           description: 置物櫃數量
+ *           example: 200
+ *         trafficGuide:
+ *           type: string
+ *           nullable: true
+ *           description: 交通指引
+ *           example: "捷運板南線市政府站 1 號出口步行約 10 分鐘"
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           description: 建立時間
+ *           example: "2024-01-01T00:00:00.000Z"
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ *           description: 更新時間
+ *           example: "2024-01-01T00:00:00.000Z"
+ */
 
 /**
  * @swagger
@@ -29,6 +93,37 @@ import venueController from './venue.controller'
  *                 type: string
  *                 description: 場館名稱
  *                 example: "台北小巨蛋"
+ *               area:
+ *                 type: string
+ *                 nullable: true
+ *                 enum: [NORTHERN, CENTRAL, SOUTHERN, EASTERN, ISLANDS]
+ *                 description: 所在地區
+ *                 example: "NORTHERN"
+ *               address:
+ *                 type: string
+ *                 nullable: true
+ *                 description: 場館地址
+ *                 example: "台北市松山區南京東路四段2號"
+ *               restrictedView:
+ *                 type: string
+ *                 nullable: true
+ *                 description: 視線受限座位描述
+ *                 example: "1F-A 區後排視線部分受柱子遮擋"
+ *               seatCount:
+ *                 type: integer
+ *                 nullable: true
+ *                 description: 座位數
+ *                 example: 15000
+ *               lockerCount:
+ *                 type: integer
+ *                 nullable: true
+ *                 description: 置物櫃數量
+ *                 example: 200
+ *               trafficGuide:
+ *                 type: string
+ *                 nullable: true
+ *                 description: 交通指引
+ *                 example: "捷運板南線市政府站 1 號出口步行約 10 分鐘"
  *     responses:
  *       201:
  *         description: 場館建立成功
@@ -38,27 +133,7 @@ import venueController from './venue.controller'
  *               type: object
  *               properties:
  *                 data:
- *                   type: object
- *                   properties:
- *                     id:
- *                       type: string
- *                       format: uuid
- *                       description: 場館 ID
- *                       example: "01961a3e-0e5b-7000-8000-000000000000"
- *                     name:
- *                       type: string
- *                       description: 場館名稱
- *                       example: "台北小巨蛋"
- *                     createdAt:
- *                       type: string
- *                       format: date-time
- *                       description: 建立時間
- *                       example: "2024-01-01T00:00:00.000Z"
- *                     updatedAt:
- *                       type: string
- *                       format: date-time
- *                       description: 更新時間
- *                       example: "2024-01-01T00:00:00.000Z"
+ *                   $ref: '#/components/schemas/Venue'
  *       400:
  *         description: 場館已存在或輸入資料驗證錯誤
  *         content:
@@ -119,27 +194,7 @@ app.post(
  *               type: object
  *               properties:
  *                 data:
- *                   type: object
- *                   properties:
- *                     id:
- *                       type: string
- *                       format: uuid
- *                       description: 場館 ID
- *                       example: "01961a3e-0e5b-7000-8000-000000000000"
- *                     name:
- *                       type: string
- *                       description: 場館名稱
- *                       example: "台北小巨蛋"
- *                     createdAt:
- *                       type: string
- *                       format: date-time
- *                       description: 建立時間
- *                       example: "2024-01-01T00:00:00.000Z"
- *                     updatedAt:
- *                       type: string
- *                       format: date-time
- *                       description: 更新時間
- *                       example: "2024-01-01T00:00:00.000Z"
+ *                   $ref: '#/components/schemas/Venue'
  *       404:
  *         description: 場館不存在
  *         content:
@@ -179,32 +234,9 @@ app.get(
  *                 data:
  *                   type: array
  *                   items:
- *                     type: object
- *                     properties:
- *                       id:
- *                         type: string
- *                         format: uuid
- *                         description: 場館 ID
- *                         example: "01961a3e-0e5b-7000-8000-000000000000"
- *                       name:
- *                         type: string
- *                         description: 場館名稱
- *                         example: "台北小巨蛋"
- *                       createdAt:
- *                         type: string
- *                         format: date-time
- *                         description: 建立時間
- *                         example: "2024-01-01T00:00:00.000Z"
- *                       updatedAt:
- *                         type: string
- *                         format: date-time
- *                         description: 更新時間
- *                         example: "2024-01-01T00:00:00.000Z"
+ *                     $ref: '#/components/schemas/Venue'
  */
-app.get(
-  '/venues',
-  venueController.findAll
-)
+app.get('/venues', venueController.findAll)
 
 /**
  * @swagger
@@ -234,8 +266,39 @@ app.get(
  *             properties:
  *               name:
  *                 type: string
- *                 description: 場館名稱（可選）
+ *                 description: 場館名稱
  *                 example: "高雄巨蛋"
+ *               area:
+ *                 type: string
+ *                 nullable: true
+ *                 enum: [NORTHERN, CENTRAL, SOUTHERN, EASTERN, ISLANDS]
+ *                 description: 所在地區
+ *                 example: "SOUTHERN"
+ *               address:
+ *                 type: string
+ *                 nullable: true
+ *                 description: 場館地址
+ *                 example: "高雄市左營區博愛二路757號"
+ *               restrictedView:
+ *                 type: string
+ *                 nullable: true
+ *                 description: 視線受限座位描述
+ *                 example: "2F 後排視野不佳"
+ *               seatCount:
+ *                 type: integer
+ *                 nullable: true
+ *                 description: 座位數
+ *                 example: 15000
+ *               lockerCount:
+ *                 type: integer
+ *                 nullable: true
+ *                 description: 置物櫃數量
+ *                 example: 300
+ *               trafficGuide:
+ *                 type: string
+ *                 nullable: true
+ *                 description: 交通指引
+ *                 example: "捷運紅線巨蛋站 1 號出口"
  *     responses:
  *       200:
  *         description: 場館更新成功
@@ -245,27 +308,7 @@ app.get(
  *               type: object
  *               properties:
  *                 data:
- *                   type: object
- *                   properties:
- *                     id:
- *                       type: string
- *                       format: uuid
- *                       description: 場館 ID
- *                       example: "01961a3e-0e5b-7000-8000-000000000000"
- *                     name:
- *                       type: string
- *                       description: 場館名稱
- *                       example: "高雄巨蛋"
- *                     createdAt:
- *                       type: string
- *                       format: date-time
- *                       description: 建立時間
- *                       example: "2024-01-01T00:00:00.000Z"
- *                     updatedAt:
- *                       type: string
- *                       format: date-time
- *                       description: 更新時間
- *                       example: "2024-01-01T00:00:00.000Z"
+ *                   $ref: '#/components/schemas/Venue'
  *       401:
  *         description: 未授權 - 需要管理員權限
  *         content:

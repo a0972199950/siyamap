@@ -50,42 +50,7 @@ import authController from './auth.controller'
  *               type: object
  *               properties:
  *                 data:
- *                   type: object
- *                   properties:
- *                     id:
- *                       type: number
- *                       description: 使用者 ID
- *                       example: 1
- *                     email:
- *                       type: string
- *                       format: email
- *                       description: 使用者信箱
- *                       example: "user@example.com"
- *                     username:
- *                       type: string
- *                       nullable: true
- *                       description: 使用者名稱
- *                       example: "johndoe"
- *                     picture:
- *                       type: string
- *                       nullable: true
- *                       description: 使用者頭像
- *                       example: null
- *                     createdAt:
- *                       type: string
- *                       format: date-time
- *                       description: 建立時間
- *                       example: "2024-01-01T00:00:00.000Z"
- *                     updatedAt:
- *                       type: string
- *                       format: date-time
- *                       description: 更新時間
- *                       example: "2024-01-01T00:00:00.000Z"
- *                     metadata:
- *                       type: object
- *                       nullable: true
- *                       description: 額外資料
- *                       example: null
+ *                   $ref: '#/components/schemas/User'
  *       400:
  *         description: 輸入資料驗證錯誤
  *         content:
@@ -152,42 +117,7 @@ app.post('/auth/signup', reqValidator.json(SignupDto), authController.signup)
  *               type: object
  *               properties:
  *                 data:
- *                   type: object
- *                   properties:
- *                     id:
- *                       type: number
- *                       description: 使用者 ID
- *                       example: 1
- *                     email:
- *                       type: string
- *                       format: email
- *                       description: 使用者信箱
- *                       example: "user@example.com"
- *                     username:
- *                       type: string
- *                       nullable: true
- *                       description: 使用者名稱
- *                       example: "johndoe"
- *                     picture:
- *                       type: string
- *                       nullable: true
- *                       description: 使用者頭像
- *                       example: null
- *                     createdAt:
- *                       type: string
- *                       format: date-time
- *                       description: 建立時間
- *                       example: "2024-01-01T00:00:00.000Z"
- *                     updatedAt:
- *                       type: string
- *                       format: date-time
- *                       description: 更新時間
- *                       example: "2024-01-01T00:00:00.000Z"
- *                     metadata:
- *                       type: object
- *                       nullable: true
- *                       description: 額外資料
- *                       example: null
+ *                   $ref: '#/components/schemas/User'
  *       400:
  *         description: 輸入資料驗證錯誤
  *         content:

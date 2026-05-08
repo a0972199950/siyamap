@@ -1,20 +1,25 @@
 import { relations } from 'drizzle-orm'
-import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
+import { integer, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
 import { v7 as uuidv7 } from 'uuid'
 
-import { seatAreas } from './seat_area.schema'
 import { venues } from './venue.schema'
 
-export const seatMaps = pgTable('seat_maps', {
+export const restrooms = pgTable('restrooms', {
   id: uuid('id')
     .primaryKey()
     .$defaultFn(() => uuidv7()),
 
+  maleCount: integer('male_count'),
+
+  femaleCount: integer('female_count'),
+
+  disabilityCount: integer('disability_count'),
+
+  comment: text('comment'),
+
   venueId: uuid('venue_id')
     .references(() => venues.id)
     .notNull(),
-
-  mapSvg: text('map_svg').notNull(),
 
   createdAt: timestamp('created_at', {
     mode: 'date',
@@ -32,13 +37,11 @@ export const seatMaps = pgTable('seat_maps', {
     .$onUpdate(() => new Date()),
 })
 
-export type SeatMap = typeof seatMaps.$inferSelect
+export type Restroom = typeof restrooms.$inferSelect
 
-export const seatMapsRelations = relations(seatMaps, ({ one, many }) => ({
+export const restroomsRelations = relations(restrooms, ({ one }) => ({
   venue: one(venues, {
-    fields: [seatMaps.venueId],
+    fields: [restrooms.venueId],
     references: [venues.id],
   }),
-
-  areas: many(seatAreas),
 }))

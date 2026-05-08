@@ -7,6 +7,44 @@ import fileController from './file.controller'
 
 /**
  * @swagger
+ * components:
+ *   schemas:
+ *     File:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *           format: uuid
+ *           description: 檔案 ID
+ *           example: "01961a3e-0e5b-7000-8000-000000000000"
+ *         userId:
+ *           type: string
+ *           format: uuid
+ *           description: 上傳者使用者 ID
+ *           example: "01961a3e-0e5b-7000-8000-000000000001"
+ *         url:
+ *           type: string
+ *           format: uri
+ *           description: 檔案的公開存取 URL
+ *           example: "https://cdn.siyamap.com/550e8400-e29b-41d4-a716-446655440000.jpeg"
+ *         fileName:
+ *           type: string
+ *           description: 生成的檔案名稱
+ *           example: "550e8400-e29b-41d4-a716-446655440000.jpeg"
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           description: 建立時間
+ *           example: "2024-01-01T00:00:00.000Z"
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ *           description: 更新時間
+ *           example: "2024-01-01T00:00:00.000Z"
+ */
+
+/**
+ * @swagger
  * /api/files:
  *   post:
  *     summary: 建立檔案並生成上傳 URL
@@ -38,31 +76,7 @@ import fileController from './file.controller'
  *                   type: object
  *                   properties:
  *                     file:
- *                       type: object
- *                       properties:
- *                         id:
- *                           type: number
- *                           description: 檔案 ID
- *                           example: 1
- *                         url:
- *                           type: string
- *                           format: uri
- *                           description: 檔案的公開存取 URL
- *                           example: "https://cdn.siyamap.com/550e8400-e29b-41d4-a716-446655440000.jpeg"
- *                         fileName:
- *                           type: string
- *                           description: 生成的檔案名稱
- *                           example: "550e8400-e29b-41d4-a716-446655440000.jpeg"
- *                         createdAt:
- *                           type: string
- *                           format: date-time
- *                           description: 建立時間
- *                           example: "2024-01-01T00:00:00.000Z"
- *                         updatedAt:
- *                           type: string
- *                           format: date-time
- *                           description: 更新時間
- *                           example: "2024-01-01T00:00:00.000Z"
+ *                       $ref: '#/components/schemas/File'
  *                     uploadUrl:
  *                       type: string
  *                       format: uri
