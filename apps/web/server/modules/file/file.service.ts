@@ -22,7 +22,7 @@ export class FileService {
     const fileName = `${uuid()}.${extension}`
 
     const command = new PutObjectCommand({
-      Bucket: 'siyamap-images',
+      Bucket: process.env.AWS_S3_BUCKET_IMAGE_UPLOAD,
       Key: fileName,
       ContentType: fileType,
     })
