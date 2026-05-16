@@ -34,7 +34,7 @@ export class FileService {
     const [file] = await this.db
       .insert(files)
       .values({
-        url: `https://${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}/${fileName}`,
+        url: `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}/${fileName}`,
 
         fileName,
 
