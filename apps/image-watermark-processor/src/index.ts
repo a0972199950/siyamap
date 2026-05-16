@@ -111,12 +111,10 @@ export async function addWatermarkToImage(image: Buffer | string, outputPath?: s
 
 
 export const handler: S3Handler = async (s3Event) => {
+  // 在 Lambda 內不需要手動傳入 credentials，
+  // SDK 會自動從 Lambda Execution Role 的 STS 暫時憑證取得
   const s3Client = new S3Client({
     region: process.env.AWS_REGION_S3_IMAGE_UPLOAD,
-    credentials: {
-      accessKeyId: process.env.AWS_ACCESS_KEY_ID || '',
-      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || '',
-    },
   })
 
   for (const record of s3Event.Records) {

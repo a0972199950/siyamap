@@ -79,69 +79,69 @@ jobs:
         with:
           registry-type: public
 
-      # ══════════════════════════════════════════════════════════════════
-      # 模組 2：Storybook 部署
-      # ══════════════════════════════════════════════════════════════════
-      - name: 2.1 上傳 Storybook 到 S3
-        run: |
-          aws s3 sync ${{ env.STORYBOOK_OUTPUT_PATH }}/ s3://${{ env.S3_BUCKET_STORYBOOK }} \
-            --delete \
-            --cache-control "no-cache"
-
-      - name: 2.2 清除 Storybook CloudFront 快取
-        if: success()
-        run: |
-          aws cloudfront create-invalidation \
-            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_STAGE_UI }} \
-            --paths "/index.html" "/iframe.html"
-
-      # - name: 2.3 部署 Storybook 到 Chromatic
+      # # ══════════════════════════════════════════════════════════════════
+      # # 模組 2：Storybook 部署
+      # # ══════════════════════════════════════════════════════════════════
+      # - name: 2.1 上傳 Storybook 到 S3
       #   run: |
-      #     pnpm --filter @siyamap/ui exec npx chromatic --project-token=${{ secrets.CHROMATIC_PROJECT_TOKEN_STAGE }} --exit-zero-on-changes
+      #     aws s3 sync ${{ env.STORYBOOK_OUTPUT_PATH }}/ s3://${{ env.S3_BUCKET_STORYBOOK }} \
+      #       --delete \
+      #       --cache-control "no-cache"
 
-      # ══════════════════════════════════════════════════════════════════
-      # 模組 3：Next.js 部署
-      # ══════════════════════════════════════════════════════════════════
-      - name: 3.1 建置並推送 Docker Image
-        run: |
-          cd apps/web
-          docker build \
-            --platform linux/amd64 \
-            -t ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPO_NEXTJS }}:${{ env.IMAGE_TAG }} .
+      # - name: 2.2 清除 Storybook CloudFront 快取
+      #   if: success()
+      #   run: |
+      #     aws cloudfront create-invalidation \
+      #       --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_STAGE_UI }} \
+      #       --paths "/index.html" "/iframe.html"
 
-          docker push ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPO_NEXTJS }}:${{ env.IMAGE_TAG }}
+      # # - name: 2.3 部署 Storybook 到 Chromatic
+      # #   run: |
+      # #     pnpm --filter @siyamap/ui exec npx chromatic --project-token=${{ secrets.CHROMATIC_PROJECT_TOKEN_STAGE }} --exit-zero-on-changes
 
-      - name: 3.2 更新資料庫 Schema
-        run: |
-          cd apps/web
-          pnpm db:push
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL_STAGE }}
+      # # ══════════════════════════════════════════════════════════════════
+      # # 模組 3：Next.js 部署
+      # # ══════════════════════════════════════════════════════════════════
+      # - name: 3.1 建置並推送 Docker Image
+      #   run: |
+      #     cd apps/web
+      #     docker build \
+      #       --platform linux/amd64 \
+      #       -t ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPO_NEXTJS }}:${{ env.IMAGE_TAG }} .
 
-      - name: 3.3 更新 Lambda 使用新 Image
-        run: |
-          aws lambda update-function-code \
-            --function-name ${{ env.LAMBDA_NAME_NEXTJS_SSR }} \
-            --image-uri ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPO_NEXTJS }}:${{ env.IMAGE_TAG }}
+      #     docker push ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPO_NEXTJS }}:${{ env.IMAGE_TAG }}
 
-          aws lambda wait function-updated --function-name ${{ env.LAMBDA_NAME_NEXTJS_SSR }}
+      # - name: 3.2 更新資料庫 Schema
+      #   run: |
+      #     cd apps/web
+      #     pnpm db:push
+      #   env:
+      #     DATABASE_URL: ${{ secrets.DATABASE_URL_STAGE }}
 
-      - name: 3.4 上傳 Next.js 靜態資產到 S3
-        run: |
-          aws s3 sync ${{ env.NEXTJS_STATIC_OUTPUT_PATH }} s3://${{ env.S3_BUCKET_NEXTJS_STATIC }}/_next/static \
-            --delete \
-            --cache-control "public, max-age=31536000, immutable"
+      # - name: 3.3 更新 Lambda 使用新 Image
+      #   run: |
+      #     aws lambda update-function-code \
+      #       --function-name ${{ env.LAMBDA_NAME_NEXTJS_SSR }} \
+      #       --image-uri ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPO_NEXTJS }}:${{ env.IMAGE_TAG }}
 
-          aws s3 sync ${{ env.NEXTJS_PUBLIC_PATH }} s3://${{ env.S3_BUCKET_NEXTJS_STATIC }}/public \
-            --delete \
-            --cache-control "public, max-age=3600" # public 檔案通常不帶 Hash，建議快取時間設短一點
+      #     aws lambda wait function-updated --function-name ${{ env.LAMBDA_NAME_NEXTJS_SSR }}
 
-      - name: 3.5 清除 Next.js CloudFront 快取
-        if: success()
-        run: |
-          aws cloudfront create-invalidation \
-            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_STAGE_STATIC }} \
-            --paths "/_next/static/*"
+      # - name: 3.4 上傳 Next.js 靜態資產到 S3
+      #   run: |
+      #     aws s3 sync ${{ env.NEXTJS_STATIC_OUTPUT_PATH }} s3://${{ env.S3_BUCKET_NEXTJS_STATIC }}/_next/static \
+      #       --delete \
+      #       --cache-control "public, max-age=31536000, immutable"
+
+      #     aws s3 sync ${{ env.NEXTJS_PUBLIC_PATH }} s3://${{ env.S3_BUCKET_NEXTJS_STATIC }}/public \
+      #       --delete \
+      #       --cache-control "public, max-age=3600" # public 檔案通常不帶 Hash，建議快取時間設短一點
+
+      # - name: 3.5 清除 Next.js CloudFront 快取
+      #   if: success()
+      #   run: |
+      #     aws cloudfront create-invalidation \
+      #       --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_STAGE_STATIC }} \
+      #       --paths "/_next/static/*"
 
       # ══════════════════════════════════════════════════════════════════
       # 模組 4：Image Watermark Processor 部署
