@@ -10,4 +10,4 @@ COPY . .
 
 RUN npm run build
 
-CMD ["dist/handler.handler"]
+CMD ["dist/index.handler"]
