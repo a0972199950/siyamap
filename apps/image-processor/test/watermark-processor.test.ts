@@ -1,10 +1,10 @@
 import path from 'path'
 
-import { addWatermarkToImage, handler } from '../src/index'
+import { addWatermarkToImage, handler } from '../src/watermark-processor'
 
 describe('addWatermarkToImage', () => {
   test('It adds watermark', async () => {
-    await addWatermarkToImage(path.join(__dirname, './source.jpg'), path.join(__dirname, './output.jpg'))
+    await addWatermarkToImage(path.join(__dirname, './source.jpg'), path.join(__dirname, './watermark.jpg'))
     const outputBuffer = await addWatermarkToImage(path.join(__dirname, './source.jpg'))
     expect(outputBuffer).toBeDefined()
   })
@@ -17,13 +17,13 @@ describe('handler', () => {
         {
           s3: {
             bucket: { name: "siyamap-images" },
-            object: { key: "019e301a-4ce4-75d6-9981-6d5db50387ae.jpg" }
+            object: { key: "origin/019e301a-4ce4-75d6-9981-6d5db50387ae.jpg" }
           }
         }
       ]
     }
 
-    await handler(testS3Event as any, {} as any, () => {})
+    await handler(testS3Event as any)
 
     expect(true).toBe(true)
   }, 60_000)

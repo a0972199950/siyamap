@@ -1,22 +1,14 @@
 import { GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
-import type { S3Handler } from 'aws-lambda'
+import type { S3Event } from 'aws-lambda'
 import fs from 'fs'
 import path from 'path'
 import sharp from 'sharp'
 import { Readable } from 'stream'
 
-/**
- * Stream → Buffer
- */
-const streamToBuffer = async (stream: Readable): Promise<Buffer> => {
-  const chunks: Buffer[] = []
+import { getS3ObjectKeyFromPath,streamToBuffer } from './utils'
 
-  for await (const chunk of stream) {
-    chunks.push(Buffer.from(chunk))
-  }
-
-  return Buffer.concat(chunks)
-}
+const WATERMARK_IMAGE_FOLDER = 'watermark'
+const ORIGIN_IMAGE_FOLDER = 'origin'
 
 export async function addWatermarkToImage(image: Buffer | string, outputPath: string): Promise<true>
 export async function addWatermarkToImage(image: Buffer | string, outputPath?: undefined): Promise<Buffer>
@@ -109,25 +101,30 @@ export async function addWatermarkToImage(image: Buffer | string, outputPath?: s
   }
 }
 
-
-export const handler: S3Handler = async (s3Event) => {
+export const handler = async (event: S3Event) => {
   // 在 Lambda 內不需要手動傳入 credentials，
   // SDK 會自動從 Lambda Execution Role 的 STS 暫時憑證取得
   const s3Client = new S3Client({
     region: process.env.AWS_REGION_S3_IMAGE_UPLOAD,
   })
 
-  for (const record of s3Event.Records) {
-    console.log(record.s3.bucket.name)
-    console.log(record.s3.object.key)
+  for (const record of event.Records) {
+    console.log(`[資訊] bucket name: ${record.s3.bucket.name}`)
+    console.log(`[資訊] object key: ${record.s3.object.key}`)
+
+    const { folder, key } = getS3ObjectKeyFromPath(record.s3.object.key)
+
+    if (folder !== ORIGIN_IMAGE_FOLDER) {
+      continue
+    }
 
     const response = await s3Client.send(new GetObjectCommand({
       Bucket: record.s3.bucket.name,
-      Key: record.s3.object.key
+      Key: `${folder}/${key}`,
     }))
 
     if (!response.Body) {
-      throw new Error('S3 object body is empty')
+      throw new Error('[錯誤] 找不到 S3 物件內容')
     }
 
     const inputBuffer = await streamToBuffer(response.Body as Readable)
@@ -135,15 +132,14 @@ export const handler: S3Handler = async (s3Event) => {
     const outputBuffer = await addWatermarkToImage(inputBuffer)
 
     await s3Client.send(new PutObjectCommand({
-      Bucket: 'siyamap-images-watermark',
-      Key: record.s3.object.key,
+      Bucket: record.s3.bucket.name,
+      Key: `${WATERMARK_IMAGE_FOLDER}/${key}`,
       Body: outputBuffer,
       ContentType: 'image/jpeg',
     }))
 
     console.log(
-      `Uploaded processed image: s3://siyamap-images-watermark/${record.s3.object.key}`,
+      `[成功] Uploaded processed image: s3://${record.s3.bucket.name}/${WATERMARK_IMAGE_FOLDER}/${key}`,
     )
   }
 }
-

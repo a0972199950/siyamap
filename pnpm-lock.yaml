@@ -39,6 +39,43 @@ importers:
         specifier: ^8.56.1
         version: 8.56.1(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)
 
+  apps/image-processor:
+    dependencies:
+      '@aws-sdk/client-s3':
+        specifier: ^3.995.0
+        version: 3.995.0
+      aws-lambda:
+        specifier: ^1.0.7
+        version: 1.0.7
+      sharp:
+        specifier: ^0.34.5
+        version: 0.34.5
+    devDependencies:
+      '@types/aws-lambda':
+        specifier: ^8.10.161
+        version: 8.10.161
+      '@types/jest':
+        specifier: ^30.0.0
+        version: 30.0.0
+      '@types/node':
+        specifier: ^20
+        version: 20.19.33
+      jest:
+        specifier: ^30.4.2
+        version: 30.4.2(@types/node@20.19.33)(esbuild-register@3.6.0(esbuild@0.27.3))
+      ts-jest:
+        specifier: ^29.4.9
+        version: 29.4.9(@babel/core@7.29.0)(@jest/transform@30.4.1)(@jest/types@30.4.1)(babel-jest@30.4.1(@babel/core@7.29.0))(esbuild@0.27.3)(jest-util@30.4.1)(jest@30.4.2(@types/node@20.19.33)(esbuild-register@3.6.0(esbuild@0.27.3)))(typescript@5.9.3)
+      tsup:
+        specifier: ^8
+        version: 8.5.1(jiti@2.6.1)(postcss@8.5.6)(tsx@4.21.1)(typescript@5.9.3)
+      tsx:
+        specifier: ^4.21.1
+        version: 4.21.1
+      typescript:
+        specifier: ^5
+        version: 5.9.3
+
   apps/image-watermark-processor:
     dependencies:
       '@aws-sdk/client-s3':
@@ -9493,7 +9530,7 @@ snapshots:
   buffer@4.9.2:
     dependencies:
       base64-js: 1.5.1
-      ieee754: 1.1.13
+      ieee754: 1.2.1
       isarray: 1.0.0
 
   buffer@6.0.3:

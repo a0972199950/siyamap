@@ -36,8 +36,8 @@ jobs:
       CLOUDFRONT_DISTRIBUTION_ID_STAGE_STATIC: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_STAGE_STATIC }}
 
       # ── Image Watermark Processor ─────────────────────────────────────
-      ECR_REPO_IMAGE_PROCESSOR: siyamap/image-watermark-processor
-      LAMBDA_NAME_IMAGE_PROCESSOR: siyamap-lambda-image-watermark-processor-stage
+      ECR_REPO_IMAGE_PROCESSOR: siyamap/image-processor
+      LAMBDA_NAME_IMAGE_PROCESSOR: siyamap-lambda-image-processor-stage
 
     steps:
       # ══════════════════════════════════════════════════════════════════
@@ -151,7 +151,7 @@ jobs:
       # ══════════════════════════════════════════════════════════════════
       - name: 4.1 建置並推送 Docker Image
         run: |
-          cd apps/image-watermark-processor
+          cd apps/image-processor
           docker build \
             --platform linux/amd64 \
             -t ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPO_IMAGE_PROCESSOR }}:${{ env.IMAGE_TAG }} .
