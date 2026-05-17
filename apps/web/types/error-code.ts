@@ -13,5 +13,6 @@ type ErrorCode =
   | 'USER_FROM_OAUTH' // 此帳號來自 OAuth，沒有密碼
   | 'VENUE_EXISTS' // 場館已存在
   | 'DATA_NOT_FOUND' // 資料不存在
+  | 'INVALID_FILE_TYPE_FOR_WATERMARK' // 水印只能應用於圖片文件
 
 export default ErrorCode

@@ -20,6 +20,7 @@ const PageUpload: NextPage = () => {
     try {
       const { data } = await api.createFile({
         fileType: file!.type,
+        withWatermark: true,
       })
 
       logger.log('Upload URL:', data.uploadUrl)

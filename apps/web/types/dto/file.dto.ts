@@ -13,6 +13,7 @@ export type TFileDto = z.infer<typeof FileDto>
 
 export const CreateFileDto = z.object({
   fileType: z.string(),
+  withWatermark: z.boolean().optional(),
 })
 
 export type TCreateFileDto = z.infer<typeof CreateFileDto>

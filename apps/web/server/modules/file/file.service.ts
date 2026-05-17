@@ -6,7 +6,6 @@ import { v7 as uuid } from 'uuid'
 import _s3Client from '@/lib/aws-s3-client'
 import _db from '@/lib/db'
 import { files } from '@/server/schema'
-import { TCreateFileDto } from '@/types/dto'
 
 export class FileService {
   constructor(
@@ -15,15 +14,13 @@ export class FileService {
     private readonly getSignedUrl = _getSignedUrl
   ) {}
 
-  public async createFile(dto: TCreateFileDto, userId: string) {
-    const { fileType } = dto
-
+  public async createFile(fileType: string, folder = 'static', userId: string) {
     const extension = mime.extension(fileType)
     const fileName = `${uuid()}.${extension}`
 
     const command = new PutObjectCommand({
       Bucket: process.env.AWS_S3_BUCKET_IMAGE_UPLOAD,
-      Key: fileName,
+      Key: `${folder}/${fileName}`,
       ContentType: fileType,
     })
 
@@ -34,7 +31,7 @@ export class FileService {
     const [file] = await this.db
       .insert(files)
       .values({
-        url: `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}/${fileName}`,
+        url: `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}/${folder}/${fileName}`,
 
         fileName,
 

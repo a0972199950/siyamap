@@ -15,8 +15,22 @@ class FileController {
   public upload: Handler = async c => {
     const createFileDto = (await c.req.json()) as TCreateFileDto
     const user = c.get('user')
+    const { fileType, withWatermark } = createFileDto
 
-    const data = await this.fileService.createFile(createFileDto, user!.id)
+    if (withWatermark && !fileType.startsWith('image/')) {
+      return this.responseFormatter.error(c, 400, {
+        code: 'INVALID_FILE_TYPE_FOR_WATERMARK',
+        message: 'Watermark can only be applied to image files',
+      })
+    }
+
+    const fileFolder = withWatermark ? 'origin' : 'static'
+
+    const data = await this.fileService.createFile(
+      fileType,
+      fileFolder,
+      user!.id
+    )
 
     return this.responseFormatter.success(c, 200, { data })
   }
