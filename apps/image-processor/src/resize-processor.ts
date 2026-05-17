@@ -30,17 +30,20 @@ export const resizeImage = async (inputBuffer: Buffer, width: number, outputPath
 }
 
 export const handler = async (event: APIGatewayProxyEventV2) => {
-  const width = event.queryStringParameters?.width
-  const path = event.rawPath
+  // path format: /resize/w_{width}/{folder}/{key}
+  const parts = event.rawPath.replace(/^\//, '').split('/')
+  const widthMatch = parts[1]?.match(/^w_(\d+)$/)
+  const width = widthMatch?.[1]
 
   if (!width || !ACCEPTED_IMAGE_WIDTHS.includes(width)) {
     return {
       statusCode: 400,
-      body: JSON.stringify({ message: `[錯誤] Invalid width parameter: ${width}` }),
+      body: JSON.stringify({ message: `[錯誤] Invalid width parameter: ${parts[1]}` }),
     }
   }
 
-  const { folder, key } = getS3ObjectKeyFromPath(path)
+  const remainingPath = parts.slice(2).join('/')
+  const { folder, key } = getS3ObjectKeyFromPath(remainingPath)
 
   const s3Client = new S3Client({
     region: process.env.AWS_REGION_S3_IMAGE_UPLOAD,

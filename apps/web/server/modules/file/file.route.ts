@@ -25,8 +25,15 @@ import fileController from './file.controller'
  *         url:
  *           type: string
  *           format: uri
- *           description: 檔案的公開存取 URL
- *           example: "https://cdn.siyamap.com/550e8400-e29b-41d4-a716-446655440000.jpeg"
+ *           description: |
+ *             檔案的公開存取 URL，格式為 {domain}/{folder}/{fileName}。
+ *             - domain：目前 stage 與 production 皆為 https://cdn.siyamap.com
+ *             - folder：可能為 static / origin / watermark
+ *               - origin 存在時，watermark 必然存在
+ *             - 若需壓縮圖片，改以 resize 端點存取：
+ *               https://cdn.siyamap.com/resize/w_{width}/{folder}/{fileName}
+ *               width 僅接受：200、400、800
+ *           example: "https://cdn.siyamap.com/origin/550e8400-e29b-41d4-a716-446655440000.jpeg"
  *         fileName:
  *           type: string
  *           description: 生成的檔案名稱

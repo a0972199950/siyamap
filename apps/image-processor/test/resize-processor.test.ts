@@ -33,8 +33,7 @@ describe('resizeImage', () => {
 describe('handler', () => {
   test('It returns 400 when width is missing', async () => {
     const event = {
-      rawPath: '/origin/019e301a-4ce4-75d6-9981-6d5db50387ae.jpg',
-      queryStringParameters: {},
+      rawPath: '/resize/origin/019e301a-4ce4-75d6-9981-6d5db50387ae.jpg',
     }
 
     const result = await handler(event as any)
@@ -46,8 +45,7 @@ describe('handler', () => {
 
   test('It returns 400 when width is not accepted', async () => {
     const event = {
-      rawPath: '/origin/019e301a-4ce4-75d6-9981-6d5db50387ae.jpg',
-      queryStringParameters: { width: '999' },
+      rawPath: '/resize/w_999/origin/019e301a-4ce4-75d6-9981-6d5db50387ae.jpg',
     }
 
     const result = await handler(event as any)
@@ -59,8 +57,7 @@ describe('handler', () => {
 
   test('It can resize image from S3', async () => {
     const event = {
-      rawPath: '/origin/019e301a-4ce4-75d6-9981-6d5db50387ae.jpg',
-      queryStringParameters: { width: '400' },
+      rawPath: '/resize/w_400/origin/019e301a-4ce4-75d6-9981-6d5db50387ae.jpg',
     }
 
     const result = await handler(event as any)
